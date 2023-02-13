@@ -26,9 +26,6 @@
     cancel=false;
   }
 
-  function checkForCancel(){
-    return cancel;
-  }
 
   function sendChatGPTMessage(messageText){
       if(document.getElementsByTagName("textarea")[0]===undefined)return;
