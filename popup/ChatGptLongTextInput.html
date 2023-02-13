@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="ChatGptLongTextInput.css" />
+  </head>
+
+  <body>
+    <div id="popup-content">
+      <button>Start</button>
+      <button type="reset">Reset</button>
+      <form>
+        <label for="FirstMessage">First Message:</label>
+        <input id="FirstMessage" type ="text" value="I am going to provide you a book in multiple messages.">
+        <label for="PrefixMessage">Before each addition:</label>
+        <input id="PrefixMessage" type ="text" value="Here is the next page, please do not respond aside from confirmation:">
+        <label for="textInput">Text to import:</label>
+        <textarea id="textInput"></textarea>
+      </form>
+
+    </div>
+    <div id="error-content" class="hidden">
+      <p>Can't beastify this web page.</p>
+      <p>Try a different page.</p>
+    </div>
+    <script src="ChatGptLongTextInput.js"></script>
+  </body>
+
+</html>
