@@ -30,13 +30,13 @@
   function sendChatGPTMessage(messageText){
       if(document.getElementsByTagName("textarea")[0]===undefined)return;
       document.body.getElementsByTagName("textarea")[0].value = messageText;
-      sendMessageButtonClick();
   }
 
   function run(message) {
     if (url.match("https:\/\/chat.openai.com\/chat\S*")) {
       sendChatGPTMessage(message.firstMessage);
       waitForRegenerateResponseButton(sendMessages, message);
+      sendMessageButtonClick();
     } else {
       console.log("Wrong Url");
     }
