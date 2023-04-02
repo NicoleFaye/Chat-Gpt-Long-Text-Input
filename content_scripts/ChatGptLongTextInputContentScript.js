@@ -30,7 +30,8 @@
   function sendChatGPTMessage(messageText){
       if(document.getElementsByTagName("textarea")[0]===undefined)return;
       document.body.getElementsByTagName("textarea")[0].value = messageText;
-      sendMessageButtonClick();
+      document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
+      //sendMessageButtonClick();
   }
 
   function run(message) {
@@ -61,10 +62,6 @@
     }
 
     return substrings;
-  }
-
-  function sendMessageButtonClick() {
-    document.body.getElementsByClassName(sendMessageButtonClassString)[0].click();
   }
 
 
@@ -100,3 +97,15 @@
   });
 
 })();
+
+
+
+// Create a new KeyboardEvent object for the 'keydown' event
+const enterKeyDownEvent = new KeyboardEvent('keydown', {
+  key: 'Enter',
+  code: 'Enter',
+  keyCode: 13,
+  which: 13,
+  bubbles: true,
+  cancelable: true
+});
