@@ -14,9 +14,10 @@
 
   const stopGeneratingButtonClassString = "btn flex justify-center gap-2 btn-neutral border-0";
   const sendMessageButtonClassString = "absolute p-1 rounded-md text-gray-500 bottom-1.5 right-1";
+  const maxMessageLength = 4000;
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport,2000);
+    subStrings = splitString(message.textToImport,maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
       var stringToSend = message.secondMessage + "\n\n" + element;
