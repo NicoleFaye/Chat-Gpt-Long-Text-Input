@@ -10,33 +10,33 @@
   }
   window.hasRun = true;
   url = window.location.href;
-  let cancel=false;
+  let cancel = false;
 
   const stopGeneratingButtonClassString = "btn flex justify-center gap-2 btn-neutral border-0";
   const sendMessageButtonClassString = "absolute p-1 rounded-md text-gray-500 bottom-1.5 right-1";
   const maxMessageLength = 4000;
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport,maxMessageLength);
+    subStrings = splitString(message.textToImport, maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
       var stringToSend = message.secondMessage + "\n\n" + element;
-      if(cancel)break;
+      if (cancel) break;
       await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
-    cancel=false;
+    cancel = false;
   }
 
 
-  function sendChatGPTMessage(messageText){
-      if(document.getElementsByTagName("textarea")[0]===undefined)return;
-      document.body.getElementsByTagName("textarea")[0].value = messageText;
-      document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
-      //sendMessageButtonClick();
+  function sendChatGPTMessage(messageText) {
+    if (document.getElementsByTagName("textarea")[0] === undefined) return;
+    document.body.getElementsByTagName("textarea")[0].value = messageText;
+    document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
+    //sendMessageButtonClick();
   }
 
   function run(message) {
-    if (url.match("https:\/\/chat.openai.com\/chat\S*")) {
+   if (url.match("https:\/\/chat.openai.com\/\?.*")){
       sendChatGPTMessage(message.firstMessage);
       waitForRegenerateResponseButton(sendMessages, message);
     } else {
@@ -75,7 +75,7 @@
         break;
       }
     }
-    if(cancel){
+    if (cancel) {
       return;
     }
     else if (isReady) {
@@ -87,26 +87,23 @@
     }
   }
 
+  // Create a new KeyboardEvent object for the 'keydown' event
+  const enterKeyDownEvent = new KeyboardEvent('keydown', {
+    key: 'Enter',
+    code: 'Enter',
+    keyCode: 13,
+    which: 13,
+    bubbles: true,
+    cancelable: true
+  });
 
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "run") {
-      cancel=false;
+      cancel = false;
       run(message);
-    }else if(message.command==="stop"){
-      cancel=true;
+    } else if (message.command === "stop") {
+      cancel = true;
     }
   });
 
 })();
-
-
-
-// Create a new KeyboardEvent object for the 'keydown' event
-const enterKeyDownEvent = new KeyboardEvent('keydown', {
-  key: 'Enter',
-  code: 'Enter',
-  keyCode: 13,
-  which: 13,
-  bubbles: true,
-  cancelable: true
-});
