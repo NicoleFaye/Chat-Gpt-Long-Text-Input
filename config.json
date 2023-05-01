@@ -1,5 +1,0 @@
-{
-  "stopGeneratingButtonClassString": "btn flex justify-center gap-2 btn-neutral border-0",
-  "sendMessageButtonClassString": "absolute p-1 rounded-md text-gray-500 bottom-1.5 right-1",
-  "maxMessageLength": 4000
-}

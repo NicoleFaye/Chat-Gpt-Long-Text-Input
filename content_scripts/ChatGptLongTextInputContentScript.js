@@ -1,5 +1,5 @@
 
-(async function () {
+(function () {
   /**
    * Check and set a global guard variable.
    * If this content script is injected into the same page again,
@@ -12,15 +12,9 @@
   url = window.location.href;
   let cancel = false;
 
-  // Load the JSON config file
-  const response = await fetch(browser.runtime.getURL('config.json'));
-  const config = await response.json();
-
-  // Replace the constants with the values from the config file
-  const stopGeneratingButtonClassString = config.stopGeneratingButtonClassString;
-  const sendMessageButtonClassString = config.sendMessageButtonClassString;
-  const maxMessageLength = config.maxMessageLength;
-
+  const stopGeneratingButtonClassString = "btn flex justify-center gap-2 btn-neutral border-0";
+  const sendMessageButtonClassString = "absolute p-1 rounded-md text-gray-500 bottom-1.5 right-1";
+  const maxMessageLength = 4000;
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, maxMessageLength);
