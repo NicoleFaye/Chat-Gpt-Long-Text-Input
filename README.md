@@ -9,7 +9,7 @@
     - txt
     - csv
     - pdf 
-    - doc
+    - docx
 - settings page
 - more formatting options in regards to newlines and whitespace
 
