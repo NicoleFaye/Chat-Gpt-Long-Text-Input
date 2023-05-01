@@ -56,7 +56,8 @@ function listenForClicks() {
     }
   });
 
-  window.addEventListener("unload", (event) => {
+}
+  window.addEventListener("visibilitychange", (event) => {
     var data = {
       textToImport: document.body.getElementsByTagName("textarea")[0].value,
       firstMessage: document.body.getElementsByTagName("input")[0].value,
@@ -72,7 +73,6 @@ function listenForClicks() {
     document.body.getElementsByTagName("input")[0].value = storedData.firstMessage;
     document.body.getElementsByTagName("input")[1].value = storedData.secondMessage;
   }
-}
 
 /**
  * There was an error executing the script.
