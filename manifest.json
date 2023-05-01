@@ -16,11 +16,9 @@
     "config.json"
   ],
 
-
   "browser_action": {
     "default_icon": "icons/Red32.png",
     "default_title": "Chat Gpt Long Text Input",
     "default_popup": "popup/ChatGptLongTextInput.html"
-
   }
 }
