@@ -15,7 +15,7 @@ function listenForClicks() {
 
 
     function run(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {
+      chrome.tabs.sendMessage(tabs[0].id, {
         command: "run",
         textToImport: document.body.getElementsByTagName("textarea")[0].value,
         firstMessage: document.body.getElementsByTagName("input")[0].value,
@@ -28,7 +28,7 @@ function listenForClicks() {
         document.body.getElementsByTagName("input")[0].value=defaultValues.firstMessage;
         document.body.getElementsByTagName("input")[1].value=defaultValues.secondMessage;
         document.body.getElementsByTagName("textArea")[0].setAttribute("height",defaultValues.textToImportHeight)
-      browser.tabs.sendMessage(tabs[0].id, {
+      chrome.tabs.sendMessage(tabs[0].id, {
         command: "stop",
       });
       
@@ -46,11 +46,11 @@ function listenForClicks() {
       return;
     }
     if (e.target.type === "reset") {
-      browser.tabs.query({ active: true, currentWindow: true })
+      chrome.tabs.query({ active: true, currentWindow: true })
         .then(reset)
         .catch(reportError);
     } else {
-      browser.tabs.query({ active: true, currentWindow: true })
+      chrome.tabs.query({ active: true, currentWindow: true })
         .then(run)
         .catch(reportError);
     }
@@ -83,3 +83,7 @@ function reportExecuteScriptError(error) {
   document.querySelector("#error-content").classList.remove("hidden");
   console.error(`Failed to execute content script: ${error.message}`);
 }
+
+chrome.tabs.executeScript({ file: "/content_scripts/ChatGptLongTextInputContentScript.js" })
+  .then(listenForClicks)
+  .catch(reportExecuteScriptError);

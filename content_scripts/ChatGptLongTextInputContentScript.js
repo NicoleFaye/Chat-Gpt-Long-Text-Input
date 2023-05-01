@@ -13,9 +13,8 @@
   let cancel = false;
 
   // Load the JSON config file
-  const response = await fetch(browser.runtime.getURL('config.json'));
+  const response = await fetch(chrome.runtime.getURL('config.json'));
   const config = await response.json();
-
   // Replace the constants with the values from the config file
   const stopGeneratingButtonClassString = config.stopGeneratingButtonClassString;
   const sendMessageButtonClassString = config.sendMessageButtonClassString;
@@ -103,7 +102,8 @@
     cancelable: true
   });
 
-  browser.runtime.onMessage.addListener((message) => {
+  chrome.runtime.onMessage.addListener((message) => {
+    console.log("here");
     if (message.command === "run") {
       cancel = false;
       run(message);
