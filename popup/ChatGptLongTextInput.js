@@ -96,7 +96,7 @@ if (storedData !== null) {
 
 storedData= JSON.parse(localStorage.getItem("initialize"));
 if(storedData!==null){
-
+  console.debug("not initialized");
 }
 else{
   resetInputs();
