@@ -28,7 +28,8 @@
       var element = subStrings[i];
       var stringToSend = message.secondMessage + "\n\n" + element;
       if (cancel) break;
-      await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
+      await timeout(1000);
+      waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
     cancel = false;
   }
