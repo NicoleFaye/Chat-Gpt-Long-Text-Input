@@ -1,9 +1,9 @@
 //get default values from html file because somehow that felt like less work than just extracting them out into here.
 var defaultValues = {
-        textToImport: document.body.getElementsByTagName("textarea")[0].value,
-        firstMessage: document.body.getElementsByTagName("input")[0].value,
-        secondMessage: document.body.getElementsByTagName("input")[1].value,
-        textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+  textToImport: document.body.getElementsByTagName("textarea")[0].value,
+  firstMessage: document.body.getElementsByTagName("input")[0].value,
+  secondMessage: document.body.getElementsByTagName("input")[1].value,
+  textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
 }
 
 /**
@@ -23,15 +23,15 @@ function listenForClicks() {
       });
     }
 
-    function reset(tabs){
-        document.body.getElementsByTagName("textarea")[0].value=defaultValues.textToImport;
-        document.body.getElementsByTagName("input")[0].value=defaultValues.firstMessage;
-        document.body.getElementsByTagName("input")[1].value=defaultValues.secondMessage;
-        document.body.getElementsByTagName("textArea")[0].setAttribute("height",defaultValues.textToImportHeight)
+    function reset(tabs) {
+      document.body.getElementsByTagName("textarea")[0].value = defaultValues.textToImport;
+      document.body.getElementsByTagName("input")[0].value = defaultValues.firstMessage;
+      document.body.getElementsByTagName("input")[1].value = defaultValues.secondMessage;
+      document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
       chrome.tabs.sendMessage(tabs[0].id, {
         command: "stop",
       });
-      
+
     }
 
     /**
@@ -84,6 +84,17 @@ function reportExecuteScriptError(error) {
   console.error(`Failed to execute content script: ${error.message}`);
 }
 
-chrome.tabs.executeScript({ file: "/content_scripts/ChatGptLongTextInputContentScript.js" })
-  .then(listenForClicks)
-  .catch(reportExecuteScriptError);
+//Chrome inject method 
+function injectScript(tabs) {
+  chrome.scripting.executeScript({
+    target: { tabId: tabs[0].id },
+    files: ["/content_scripts/ChatGptLongTextInputContentScript.js"]
+  })
+    .then(listenForClicks)
+    .catch(reportExecuteScriptError);
+}
+
+//Chrome inject method
+chrome.tabs.query({ active: true, currentWindow: true })
+  .then(injectScript)
+  .catch(reportError)
