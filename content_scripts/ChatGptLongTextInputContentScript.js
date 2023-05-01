@@ -27,18 +27,20 @@
       var element = subStrings[i];
       var stringToSend = message.secondMessage + "\n\n" + element;
       if (cancel) break;
-      await timeout(1000);
+      await timeout(500);
       waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
     cancel = false;
   }
 
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
   function sendChatGPTMessage(messageText) {
     if (document.getElementsByTagName("textarea")[0] === undefined) return;
     document.body.getElementsByTagName("textarea")[0].value = messageText;
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
-    //sendMessageButtonClick();
   }
 
   function run(message) {
