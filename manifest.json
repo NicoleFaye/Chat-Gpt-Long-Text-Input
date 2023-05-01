@@ -3,7 +3,7 @@
   "description": "A Firefox Browser plugin for Chat Gpt that automates the entry of a large peice of text a little bit at a time.",
   "manifest_version": 2,
   "name": "Chat Gpt Long Text Input",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "homepage_url": "https://github.com/NicoleFaye/Chat-Gpt-Long-Text-Input",
   "icons": {
     "32": "icons/Red32.png",
@@ -13,8 +13,7 @@
 
   "permissions": [
     "activeTab",
-    "storage",
-    "file://*/*"
+    "storage"
   ],
 
   "browser_action": {
