@@ -88,7 +88,7 @@
     } else {
       setTimeout(() => {
         waitForRegenerateResponseButton(callback, param1);
-      }, 100);
+      }, 1000);
     }
   }
 
@@ -103,7 +103,6 @@
   });
 
   chrome.runtime.onMessage.addListener((message) => {
-    console.log("here");
     if (message.command === "run") {
       cancel = false;
       run(message);
