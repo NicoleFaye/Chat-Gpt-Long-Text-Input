@@ -1,5 +1,9 @@
 {
   "stopGeneratingButtonClassString": "btn flex justify-center gap-2 btn-neutral border-0",
   "sendMessageButtonClassString": "absolute p-1 rounded-md text-gray-500 bottom-1.5 right-1",
-  "maxMessageLength": 4000
+  "maxMessageLength": 4000,
+  "mainPrompt":"I am going to provide you a large document broken up into smaller pieces, sent to you one message at a time. Each line will be prepended with a message letting you know when the document begins and appended with a message letting you know when the document ends. Please only repond with the word: \"Confirmed.\"",
+  "messagePrepend":"Here is the next portion. (Document beings here)",
+  "messageAppend":"(Document ends here) Respond to this message with only the word: \"Confirmed.\"",
+  "timeout":500
 }
