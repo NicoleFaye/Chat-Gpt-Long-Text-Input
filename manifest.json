@@ -13,7 +13,8 @@
 
   "permissions": [
     "activeTab",
-    "config.json"
+    "storage",
+    "file://*/*"
   ],
 
   "browser_action": {
