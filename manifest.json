@@ -13,8 +13,7 @@
 
   "permissions": [
     "activeTab",
-    "storage",
-    "file://*/*"
+    "storage"
   ],
 
   "browser_action": {
