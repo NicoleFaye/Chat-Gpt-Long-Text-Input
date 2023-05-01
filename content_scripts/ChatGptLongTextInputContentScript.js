@@ -20,6 +20,7 @@
   const stopGeneratingButtonClassString = config.stopGeneratingButtonClassString;
   const sendMessageButtonClassString = config.sendMessageButtonClassString;
   const maxMessageLength = config.maxMessageLength;
+  const timeout= config.timeout;
 
 
   async function sendMessages(message) {
@@ -28,7 +29,7 @@
       var element = subStrings[i];
       var stringToSend = message.secondMessage + "\n\n" + element;
       if (cancel) break;
-      await timeout(1000);
+      await timeout(timeout);
       waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
     cancel = false;
@@ -90,7 +91,7 @@
     } else {
       setTimeout(() => {
         waitForRegenerateResponseButton(callback, param1);
-      }, 1000);
+      }, timeout);
     }
   }
 
