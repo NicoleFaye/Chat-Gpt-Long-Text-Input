@@ -89,7 +89,7 @@
     } else {
       setTimeout(() => {
         waitForRegenerateResponseButton(callback, param1);
-      }, 100);
+      }, 1000);
     }
   }
 
