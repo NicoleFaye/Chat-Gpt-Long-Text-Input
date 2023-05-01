@@ -38,7 +38,7 @@ function listenForClicks() {
      * Just log the error to the console.
      */
     function reportError(error) {
-      console.error(`Nicole Error: ${error}`);
+      console.error(`Error: ${error}`);
     }
 
     if (e.target.tagName !== "BUTTON" || !e.target.closest("#popup-content")) {
