@@ -92,11 +92,16 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[0].value = storedData.mainPrompt;
   document.body.getElementsByTagName("input")[1].value = storedData.messagePrepend;
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
-} else {
-  resetInputs();
+} 
+
+storedData= JSON.parse(localStorage.getItem("initialize"));
+if(storedData!==null){
+
 }
-
-
+else{
+  resetInputs();
+  localStorage.setItem("initialize", JSON.stringify({"done":true}));
+}
 
 /**
  * There was an error executing the script.
