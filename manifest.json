@@ -5,7 +5,10 @@
   "version": "1.1.1",
   "homepage_url": "https://github.com/NicoleFaye/Chat-Gpt-Long-Text-Input",
   "icons": {
-    "48": "icons/Red48.png"
+    "48": "icons/Red48.png",
+    "32": "icons/Red32.png",
+    "128": "icons/Red128.png",
+    "256": "icons/big.png"
   },
 
   "permissions": [
