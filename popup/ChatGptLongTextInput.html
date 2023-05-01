@@ -12,10 +12,12 @@
       <button>Start</button>
       <button type="reset">Reset</button>
       <form>
-        <label for="FirstMessage">First Message:</label>
-        <input id="FirstMessage" type ="text" value="I am going to provide you a book in multiple messages.">
-        <label for="PrefixMessage">Before each addition:</label>
-        <input id="PrefixMessage" type ="text" value="Here is the next page, please do not respond aside from confirmation:">
+        <label for="mainPrompt">First Message:</label>
+        <input id="mainPrompt" type ="text" value=""/>
+        <label for="messagePrepend">Before each addition:</label>
+        <input id="messagePrepend" type ="text" value=""/>
+        <label for="messageAppend">After each addition:</label>
+        <input id="messageAppend" type ="text" value=""/>
         <label for="textInput">Text to import:</label>
         <textarea id="textInput"></textarea>
       </form>
