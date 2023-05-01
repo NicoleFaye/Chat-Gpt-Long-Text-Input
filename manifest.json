@@ -10,7 +10,8 @@
   },
 
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "config.json"
   ],
 
 
