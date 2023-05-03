@@ -16,6 +16,13 @@ async function getConfig() {
 }
 getConfig();
 
+function resetInputs() {
+  document.body.getElementsByTagName("textarea")[0].value = defaultValues.textToImport;
+  document.body.getElementsByTagName("input")[0].value = defaultValues.mainPrompt;
+  document.body.getElementsByTagName("input")[1].value = defaultValues.messagePrepend;
+  document.body.getElementsByTagName("input")[2].value = defaultValues.messageAppend;
+  document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
+}
 
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
@@ -33,13 +40,6 @@ function listenForClicks() {
       });
     }
 
-    function resetInputs(){
-      document.body.getElementsByTagName("textarea")[0].value = defaultValues.textToImport;
-      document.body.getElementsByTagName("input")[0].value = defaultValues.mainPrompt;
-      document.body.getElementsByTagName("input")[1].value = defaultValues.messagePrepend;
-      document.body.getElementsByTagName("input")[2].value = defaultValues.messageAppend;
-      document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
-    }
 
     function reset(tabs) {
       resetInputs();
@@ -71,7 +71,7 @@ function listenForClicks() {
   });
 
 }
-window.addEventListener("unload", (event) => {
+window.addEventListener("visibilitychange", (event) => {
   var data = {
     textToImport: document.body.getElementsByTagName("textarea")[0].value,
     mainPrompt: document.body.getElementsByTagName("input")[0].value,
@@ -92,11 +92,7 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[0].value = storedData.mainPrompt;
   document.body.getElementsByTagName("input")[1].value = storedData.messagePrepend;
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
-} else {
-  resetInputs();
 }
-
-
 
 /**
  * There was an error executing the script.
