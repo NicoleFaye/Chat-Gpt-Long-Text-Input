@@ -19,15 +19,16 @@
   const stopGeneratingButtonClassString = config.stopGeneratingButtonClassString;
   const sendMessageButtonClassString = config.sendMessageButtonClassString;
   const maxMessageLength = config.maxMessageLength;
+  const timeout_ms = config.timeout;
 
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
-      var stringToSend = message.secondMessage + "\n\n" + element;
+      var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
       if (cancel) break;
-      await timeout(500);
+      await timeout(timeout_ms);
       waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
     cancel = false;
@@ -35,7 +36,7 @@
 
   function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-}
+  }
 
   function sendChatGPTMessage(messageText) {
     if (document.getElementsByTagName("textarea")[0] === undefined) return;
@@ -44,8 +45,8 @@
   }
 
   function run(message) {
-   if (url.match("https:\/\/chat.openai.com\/\?.*")){
-      sendChatGPTMessage(message.firstMessage);
+    if (url.match("https:\/\/chat.openai.com\/\?.*")) {
+      sendChatGPTMessage(message.mainPrompt);
       waitForRegenerateResponseButton(sendMessages, message);
     } else {
       console.log("Wrong Url");
@@ -91,7 +92,7 @@
     } else {
       setTimeout(() => {
         waitForRegenerateResponseButton(callback, param1);
-      }, 1000);
+      }, timeout_ms);
     }
   }
 
