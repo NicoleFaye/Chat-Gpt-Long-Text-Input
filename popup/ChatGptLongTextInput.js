@@ -1,6 +1,7 @@
 // Load the JSON config file
 var config = {};
 var defaultValues = {};
+var error=false;
 
 async function getConfig() {
   const response = await fetch(browser.runtime.getURL('config.json'));
@@ -63,7 +64,7 @@ function listenForClicks() {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(reset)
         .catch(reportError);
-    } else {
+    } else if(!error) {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(run)
         .catch(reportError);
@@ -99,9 +100,10 @@ if (storedData !== null) {
  * Display the popup's error message, and hide the normal UI.
  */
 function reportExecuteScriptError(error) {
-  document.querySelector("#popup-content").classList.add("hidden");
-  document.querySelector("#error-content").classList.remove("hidden");
+  //document.querySelector("#popup-content").classList.add("hidden");
+  //document.querySelector("#error-content").classList.remove("hidden");
   console.error(`Failed to execute content script: ${error.message}`);
+  error=true;
 }
 
 /**
