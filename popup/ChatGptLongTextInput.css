@@ -13,8 +13,7 @@ body {
 
 button {
   border: none;
-  width: 100%;
-  margin: 8px 0;
+  margin: 8px 8px 8px 0; 
   padding: 8px 16px;
   text-align: center;
   font-size: 1.5em;
@@ -24,7 +23,26 @@ button {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
+  display: inline-block; 
 }
+
+
+#settings {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 5px;
+}
+
+#settings::before {
+  content: "\f085"; /* use the Unicode value for the cog wheel icon */
+  font-family: "Font Awesome 5 Free";
+  margin-right: 5px;
+}
+
+
 
 input,
 textarea {
@@ -58,8 +76,13 @@ button:hover {
   background-color: #333;
 }
 
+button[type="start"]{
+  width: 50%;
+}
+
 button[type="reset"] {
   background-color: #8b0000;
+  width: 25%; 
 }
 
 button[type="reset"]:hover {
