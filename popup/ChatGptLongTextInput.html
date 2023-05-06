@@ -9,10 +9,10 @@
 
   <body>
     <div id="popup-content">
-      <div>
+      <div class="button-container">
         <button type="start">Start</button>
-        <button type="reset">Reset</button>
-        <button type="settings" type="settings"></button>
+        <button type="reset" id="reset-button">Reset</button>
+        <button type="settings" id="settings-button"></button>
       </div>
       <form>
         <label for="mainPrompt">First Message:</label>
@@ -27,6 +27,13 @@
         <textarea id="textInput"></textarea>
       </form>
 
+    </div>
+    <div id="settings-content" class="">
+      <form>
+        <label for="defaultMainPrompt">First Message:</label>
+        <input id="defaultMainPrompt" type="text"/>
+        <button type="settings" id="settings-button"></button>
+      </form>
     </div>
     <div id="error-content" class="hidden">
       <p>Try a different page.</p>

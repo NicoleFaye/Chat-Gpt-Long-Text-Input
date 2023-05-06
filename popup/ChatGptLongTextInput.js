@@ -17,6 +17,13 @@ async function getConfig() {
 }
 getConfig();
 
+
+const settingsButton = document.getElementById("settings-button");
+const settingsContent = document.getElementById("settings-content");
+const popupContent= document.getElementById("popup-content");
+
+
+
 function resetInputs() {
   document.body.getElementsByTagName("textarea")[0].value = defaultValues.textToImport;
   document.body.getElementsByTagName("input")[0].value = defaultValues.mainPrompt;
@@ -60,7 +67,10 @@ function listenForClicks() {
       // Ignore when click is not on a button within <div id="popup-content">.
       return;
     }
-    if (e.target.type === "reset") {
+    if (e.target.id === "settings-button") {
+      settingsContent.classList.toggle("show");
+    }
+    else if (e.target.id=== "reset-button") {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(reset)
         .catch(reportError);
