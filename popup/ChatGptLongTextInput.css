@@ -90,20 +90,36 @@ button:hover {
   background-color: #333;
 }
 
-#settings-button:hover{
-  background-color: #333;
-}
-#settings-button{
+#close-button{
   width: 32px;
   height: 32px;
   align-items: center;
   margin-left: auto;
   background-size: cover;
   background-color: transparent;
+  box-shadow: none;
   border:none;
   cursor: pointer;
-  background-image: url('/icons/Cog32.png');
+  background-image: url('/icons/X32.png');
 }
+#settings-button {
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  background-image: url('/icons/Cog48.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.4s ease-in-out;
+}
+
+#settings-button:hover {
+  transform: rotate(90deg) scale(1.15);
+}
+
 
 
 button[type="start"]{
@@ -111,7 +127,7 @@ button[type="start"]{
 }
 
 button[type="reset"] {
-  background-color: #8b0000;
+  background-color: #9a0707e7;
   width: 25%; 
 }
 
