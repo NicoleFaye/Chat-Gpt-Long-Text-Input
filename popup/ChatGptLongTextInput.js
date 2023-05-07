@@ -32,20 +32,6 @@ async function getConfig() {
 }
 
 
-/*
-async function getConfig() {
-  const response = await fetch(browser.runtime.getURL('config.json'));
-  const newConfig = await response.json();
-  config = newConfig;
-  defaultValues = {
-    textToImport: "",
-    mainPrompt: config.mainPrompt,
-    messagePrepend: config.messagePrepend,
-    messageAppend: config.messageAppend,
-    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
-  }
-}
-*/
 getConfig();
 
 
@@ -82,6 +68,7 @@ function listenForClicks() {
 
     function reset(tabs) {
       resetInputs();
+      if(!error)
       browser.tabs.sendMessage(tabs[0].id, {
         command: "stop",
       });
@@ -156,10 +143,10 @@ if (storedData !== null) {
  * There was an error executing the script.
  * Display the popup's error message, and hide the normal UI.
  */
-function reportExecuteScriptError(error) {
+function reportExecuteScriptError(err) {
   //document.querySelector("#popup-content").classList.add("hidden");
   //document.querySelector("#error-content").classList.remove("hidden");
-  console.error(`Failed to execute content script: ${error.message}`);
+  console.error(`Failed to execute content script: ${err.message}`);
   error = true;
 }
 
@@ -169,6 +156,11 @@ function reportExecuteScriptError(error) {
  * If we couldn't inject the script, handle the error.
  */
 
+try {
+  listenForClicks();
+} catch (err) {
+  console.error("An error occurred in listenForClicks:", err);
+}
+
 browser.tabs.executeScript({ file: "/content_scripts/ChatGptLongTextInputContentScript.js" })
-  .then(listenForClicks)
   .catch(reportExecuteScriptError);
