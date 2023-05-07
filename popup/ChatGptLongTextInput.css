@@ -113,7 +113,7 @@ button:hover {
   box-shadow: none;
   border: none;
   cursor: pointer;
-  background-image: url('/icons/Cog48.png');
+  background-image: url('/icons/cog48.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
