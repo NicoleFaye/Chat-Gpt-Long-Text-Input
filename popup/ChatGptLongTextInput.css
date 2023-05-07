@@ -28,10 +28,10 @@ body {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
-  display: inline-block; 
+  display: inline-block;
 }
 
-button{
+button {
   border: none;
   margin: 8px;
   padding: 8px 16px;
@@ -61,21 +61,23 @@ textarea {
   resize: vertical;
   background-color: #333;
   color: #fff;
-  font-family: 'Open Sans',sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
-p{
-  font-family: 'Open Sans',sans-serif;
+p {
+  font-family: 'Open Sans', sans-serif;
   font-size: 1.3em;
 }
-label{
-  font-family: 'Open Sans',sans-serif;
+
+label {
+  font-family: 'Open Sans', sans-serif;
 }
 
-input{
+input {
   font-size: .75em;
 }
-textarea{
+
+textarea {
   font-size: .85em;
 }
 
@@ -90,18 +92,20 @@ button:hover {
   background-color: #333;
 }
 
-#close-button{
+#close-button {
   width: 32px;
   height: 32px;
-  align-items: center;
-  margin-left: auto;
-  background-size: cover;
   background-color: transparent;
   box-shadow: none;
-  border:none;
+  border: none;
   cursor: pointer;
-  background-image: url('/icons/X32.png');
+  background-image: url('/icons/X48.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.2s ease-in-out;
 }
+
 #settings-button {
   width: 32px;
   height: 32px;
@@ -120,15 +124,19 @@ button:hover {
   transform: rotate(90deg) scale(1.15);
 }
 
+#close-button:hover {
+  transform: scale(1.1);
+}
 
 
-button[type="start"]{
+
+button[type="start"] {
   width: 50%;
 }
 
 button[type="reset"] {
   background-color: #9a0707e7;
-  width: 25%; 
+  width: 25%;
 }
 
 button[type="reset"]:hover {
@@ -148,6 +156,8 @@ button[type="reset"]:hover {
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
+  border: 3px solid #1e1e1e;
+  border-radius: 10px;
 }
 
 #settings-content.show {
