@@ -12,7 +12,6 @@
     - csv
     - pdf 
     - docx
-- settings page
 - more formatting options in regards to newlines and whitespace
 
 ## Feel free to make suggestions in the issues section
