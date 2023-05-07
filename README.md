@@ -4,9 +4,7 @@
 ### [Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)
  
 ### Screencap:
-![Popup](https://user-images.githubusercontent.com/41876584/236659627-75b9716f-8cbb-4765-af0e-10312cf89586.png)
-![Settings](https://user-images.githubusercontent.com/41876584/236659628-e416401f-d8db-4df4-b4ae-fd74e138b1dd.png)
-
+![Screenshot_7](https://user-images.githubusercontent.com/41876584/235541928-949d0f78-0c3f-4737-bd4d-c91d435435e1.png)
 
 # Planned Features:
 - ablility to import file directly
