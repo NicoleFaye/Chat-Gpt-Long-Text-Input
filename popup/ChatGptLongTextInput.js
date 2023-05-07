@@ -94,7 +94,7 @@ function listenForClicks() {
       console.error(`Error: ${error}`);
     }
 
-    if (e.target.tagName !== "BUTTON" || !(e.target.closest("#popup-content")||e.target.closest("#settings-content"))) {
+    if (e.target.tagName !== "BUTTON" || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
       // Ignore when click is not on a button within <div id="popup-content">.
       return;
     }
@@ -108,7 +108,7 @@ function listenForClicks() {
       settingsContent.classList.toggle("show");
     }
     else if (e.target.id === "save-button") {
-      console.log("save");
+      settingsContent.classList.toggle("show");
       defaultValues.mainPrompt = document.getElementById("defaultMainPrompt").value;
       defaultValues.messagePrepend = document.getElementById("defaultPrepend").value;
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
@@ -136,7 +136,6 @@ window.addEventListener("visibilitychange", (event) => {
     mainPrompt: document.body.getElementsByTagName("input")[0].value,
     messagePrepend: document.body.getElementsByTagName("input")[1].value,
     messageAppend: document.body.getElementsByTagName("input")[2].value,
-    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
   };
   localStorage.setItem("popupData", JSON.stringify(data));
 });
