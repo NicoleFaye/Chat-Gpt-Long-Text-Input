@@ -7,6 +7,7 @@ body {
   color: #fff;
 }
 
+
 .hidden {
   display: none;
 }
@@ -30,6 +31,20 @@ body {
   display: inline-block; 
 }
 
+button{
+  border: none;
+  margin: 8px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #1e1e1e;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
 .button-container button:last-child {
   margin-left: auto;
 }
@@ -46,6 +61,14 @@ textarea {
   resize: vertical;
   background-color: #333;
   color: #fff;
+  font-family: 'Open Sans',sans-serif;
+}
+
+p{
+  font-family: 'Open Sans',sans-serif;
+  font-size: 1.3em;
+}
+label{
   font-family: 'Open Sans',sans-serif;
 }
 
