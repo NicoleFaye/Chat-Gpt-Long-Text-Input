@@ -7,17 +7,36 @@ body {
   color: #fff;
 }
 
+
 .hidden {
   display: none;
 }
 
-button {
+.button-container {
+  display: flex;
+}
+
+.button-container button {
   border: none;
-  width: 100%;
-  margin: 8px 0;
+  margin: 8px;
   padding: 8px 16px;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #1e1e1e;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+}
+
+button {
+  border: none;
+  margin: 8px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 1.1em;
   cursor: pointer;
   background-color: #1e1e1e;
   color: #fff;
@@ -25,6 +44,11 @@ button {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
 }
+
+.button-container button:last-child {
+  margin-left: auto;
+}
+
 
 input,
 textarea {
@@ -37,13 +61,23 @@ textarea {
   resize: vertical;
   background-color: #333;
   color: #fff;
-  font-family: 'Open Sans',sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
-input{
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.3em;
+}
+
+label {
+  font-family: 'Open Sans', sans-serif;
+}
+
+input {
   font-size: .75em;
 }
-textarea{
+
+textarea {
   font-size: .85em;
 }
 
@@ -58,10 +92,74 @@ button:hover {
   background-color: #333;
 }
 
+#close-button {
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  background-image: url('/icons/X48.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.2s ease-in-out;
+}
+
+#settings-button {
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  background-image: url('/icons/Cog48.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.4s ease-in-out;
+}
+
+#settings-button:hover {
+  transform: rotate(90deg) scale(1.15);
+}
+
+#close-button:hover {
+  transform: scale(1.1);
+}
+
+
+
+button[type="start"] {
+  width: 50%;
+}
+
 button[type="reset"] {
-  background-color: #8b0000;
+  background-color: #9a0707e7;
+  width: 25%;
 }
 
 button[type="reset"]:hover {
   background-color: #660000;
+}
+
+#popup-content {
+  position: relative;
+}
+
+#settings-content {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  border: 3px solid #1e1e1e;
+  border-radius: 10px;
+}
+
+#settings-content.show {
+  top: 0;
 }
