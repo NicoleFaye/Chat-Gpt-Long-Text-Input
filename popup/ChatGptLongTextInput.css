@@ -18,8 +18,7 @@ body {
 
 .button-container button {
   border: none;
-  width: 95%;
-  margin: 8px 0;
+  margin: 8px;
   padding: 8px 16px;
   text-align: center;
   font-size: 1.1em;
@@ -48,12 +47,13 @@ button {
 
 .button-container button:last-child {
   margin-left: auto;
+  padding-right: 5em;
 }
 
 
 input,
 textarea {
-  width: calc(100% - 50px);
+  width: calc(100% - 4em);
   margin: 8px 0;
   padding: 8px 16px;
   border-radius: 4px;
@@ -75,11 +75,11 @@ label {
 }
 
 input {
-  font-size: .75em;
+  font-size: 1em;
 }
 
 textarea {
-  font-size: .85em;
+  font-size: 1em;
 }
 
 input:focus,
