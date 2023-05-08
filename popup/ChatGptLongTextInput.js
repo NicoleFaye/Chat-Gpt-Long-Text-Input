@@ -15,7 +15,7 @@ async function getConfig() {
     };
   } else {
     // Otherwise, fetch default values from config.json
-    const response = await fetch(browser.runtime.getURL('config.json'));
+    const response = await fetch(chrome.runtime.getURL('config.json'));
     const newConfig = await response.json();
     config = newConfig;
     defaultValues = {
@@ -48,6 +48,9 @@ function resetInputs() {
   document.body.getElementsByTagName("input")[2].value = defaultValues.messageAppend;
   document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
 }
+function reportError(error) {
+  console.error(`Error: ${error}`);
+}
 
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
@@ -67,19 +70,16 @@ function listenForClicks() {
 
     function reset(tabs) {
       resetInputs();
-      if(!error)
-      chrome.tabs.sendMessage(tabs[0].id, {
-        command: "stop",
-      });
+      if (!error)
+        chrome.tabs.sendMessage(tabs[0].id, {
+          command: "stop",
+        });
 
     }
 
     /**
      * Just log the error to the console.
      */
-    function reportError(error) {
-      console.error(`Error: ${error}`);
-    }
 
     if (e.target.tagName !== "BUTTON" || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
       // Ignore when click is not on a button within <div id="popup-content">.
@@ -168,4 +168,4 @@ try {
 //Chrome inject method
 chrome.tabs.query({ active: true, currentWindow: true })
   .then(injectScript)
-  .catch(reportError)
+  .catch(reportError);
