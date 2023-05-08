@@ -27,8 +27,9 @@ async function getConfig() {
     };
     localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
     localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
-    localStorage.setItem('defaultMessageAppend', defaultValues.mainPrompt);
+    localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
   }
+  resetInputs();
 }
 
 
@@ -101,7 +102,7 @@ function listenForClicks() {
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
-      localStorage.setItem('defaultMessageAppend', defaultValues.mainPrompt);
+      localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
     }
     else if (e.target.id === "reset-button") {
       chrome.tabs.query({ active: true, currentWindow: true })
@@ -145,7 +146,7 @@ if (storedData !== null) {
 function reportExecuteScriptError(err) {
   //document.querySelector("#popup-content").classList.add("hidden");
   //document.querySelector("#error-content").classList.remove("hidden");
-  console.error(`Failed to execute content script: ${err.message}`);
+  console.log(`Failed to execute content script: ${err.message}`);
   error = true;
 }
 
