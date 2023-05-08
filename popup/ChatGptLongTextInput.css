@@ -163,3 +163,19 @@ button[type="reset"]:hover {
 #settings-content.show {
   top: 0;
 }
+
+
+.confirmation-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  /* Add other styles for the popup here */
+}
+
+.confirmation-text{
+  margin: 8px;
+}
