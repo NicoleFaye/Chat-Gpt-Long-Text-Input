@@ -139,7 +139,13 @@ button[type="reset"] {
   width: 25%;
 }
 
-button[type="reset"]:hover {
+#hard-reset-button{
+  background-color: #9a0707e7;
+  width: 35%;
+
+}
+
+#hard-reset-button:hover,button[type="reset"]:hover {
   background-color: #660000;
 }
 
@@ -167,12 +173,11 @@ button[type="reset"]:hover {
 
 .confirmation-popup {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  width: 75%;
   z-index: 9999;
-  background-color: #1e1e1e;
+  background-color: #333;
   border-radius: 10px;
+  border: 3px solid #1e1e1e;
   /* Add other styles for the popup here */
 }
 

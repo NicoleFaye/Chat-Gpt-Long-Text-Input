@@ -19,20 +19,20 @@ async function getConfig() {
   }
 }
 
-async function getJsonConfig(){
-    const response = await fetch(browser.runtime.getURL('config.json'));
-    const newConfig = await response.json();
-    config = newConfig;
-    defaultValues = {
-      textToImport: "",
-      mainPrompt: config.mainPrompt,
-      messagePrepend: config.messagePrepend,
-      messageAppend: config.messageAppend,
-      textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
-    };
-    localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
-    localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
-    localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+async function getJsonConfig() {
+  const response = await fetch(browser.runtime.getURL('config.json'));
+  const newConfig = await response.json();
+  config = newConfig;
+  defaultValues = {
+    textToImport: "",
+    mainPrompt: config.mainPrompt,
+    messagePrepend: config.messagePrepend,
+    messageAppend: config.messageAppend,
+    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+  };
+  localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
+  localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
+  localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
 }
 
 getConfig();
@@ -91,6 +91,9 @@ function showConfirmationPopup(message) {
   });
 }
 
+function isConfirmationPopupOpen() {
+  return document.querySelector(".confirmation-popup") !== null;
+}
 
 
 /**
@@ -112,10 +115,10 @@ function listenForClicks() {
 
     function reset(tabs) {
       resetInputs();
-      if(!error)
-      browser.tabs.sendMessage(tabs[0].id, {
-        command: "stop",
-      });
+      if (!error)
+        browser.tabs.sendMessage(tabs[0].id, {
+          command: "stop",
+        });
     }
 
     /**
@@ -125,7 +128,7 @@ function listenForClicks() {
       console.error(`Error: ${error}`);
     }
 
-    if (e.target.tagName !== "BUTTON" || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
+    if (e.target.tagName !== "BUTTON" || isConfirmationPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
       // Ignore when click is not on a button within <div id="popup-content"> etc
       return;
     }
@@ -147,12 +150,18 @@ function listenForClicks() {
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
     }
-    else if(e.target.id==="hard-reset-button"){
-      showConfirmationPopup("Are you sure you want to restore the original default values?").then((response)=>{
-        if(response==="yes"){
-          getJsonConfig();
+    else if (e.target.id === "hard-reset-button") {
+      showConfirmationPopup("Are you sure you want to restore the original default values?").then((response) => {
+        if (response === "yes") {
+          getJsonConfig().then(() => {
+            document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
+            document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
+            document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+            settingsContent.classList.toggle("show");
+          }
+          );
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         console.error(err);
       });
     }
