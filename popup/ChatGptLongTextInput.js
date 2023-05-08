@@ -27,7 +27,7 @@ async function getConfig() {
     };
     localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
     localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
-    localStorage.setItem('defaultMessageAppend', defaultValues.mainPrompt);
+    localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
   }
 }
 
