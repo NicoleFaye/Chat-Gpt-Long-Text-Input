@@ -16,8 +16,6 @@
   const response = await fetch(chrome.runtime.getURL('config.json'));
   const config = await response.json();
   // Replace the constants with the values from the config file
-  const stopGeneratingButtonClassString = config.stopGeneratingButtonClassString;
-  const sendMessageButtonClassString = config.sendMessageButtonClassString;
   const maxMessageLength = config.maxMessageLength;
   const timeout_ms = config.timeout;
 
