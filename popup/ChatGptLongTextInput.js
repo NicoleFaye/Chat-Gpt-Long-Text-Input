@@ -15,22 +15,25 @@ async function getConfig() {
     };
   } else {
     // Otherwise, fetch default values from config.json
-    const response = await fetch(browser.runtime.getURL('config.json'));
-    const newConfig = await response.json();
-    config = newConfig;
-    defaultValues = {
-      textToImport: "",
-      mainPrompt: config.mainPrompt,
-      messagePrepend: config.messagePrepend,
-      messageAppend: config.messageAppend,
-      textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
-    };
-    localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
-    localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
-    localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+    getJsonConfig();
   }
 }
 
+async function getJsonConfig() {
+  const response = await fetch(browser.runtime.getURL('config.json'));
+  const newConfig = await response.json();
+  config = newConfig;
+  defaultValues = {
+    textToImport: "",
+    mainPrompt: config.mainPrompt,
+    messagePrepend: config.messagePrepend,
+    messageAppend: config.messageAppend,
+    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+  };
+  localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
+  localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
+  localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+}
 
 getConfig();
 
@@ -48,6 +51,50 @@ function resetInputs() {
   document.body.getElementsByTagName("input")[2].value = defaultValues.messageAppend;
   document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
 }
+
+
+function showConfirmationPopup(message) {
+  return new Promise((resolve, reject) => {
+    const popup = document.createElement("div");
+    popup.classList.add("confirmation-popup");
+
+    const popupMessage = document.createElement("p");
+    popupMessage.classList.add("confirmation-text");
+    popupMessage.textContent = message;
+    popup.appendChild(popupMessage);
+
+    const yesButton = document.createElement("button");
+    yesButton.textContent = "Yes";
+    yesButton.addEventListener("click", () => {
+      popup.remove();
+      resolve("yes");
+    });
+    popup.appendChild(yesButton);
+
+    const noButton = document.createElement("button");
+    noButton.textContent = "No";
+    noButton.addEventListener("click", () => {
+      popup.remove();
+      resolve("no");
+    });
+    popup.appendChild(noButton);
+
+    document.body.appendChild(popup);
+
+    // Position the popup in the center of the screen
+    const popupWidth = popup.offsetWidth;
+    const popupHeight = popup.offsetHeight;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    popup.style.left = (screenWidth - popupWidth) / 2 + "px";
+    popup.style.top = (screenHeight - popupHeight) / 2 + "px";
+  });
+}
+
+function isConfirmationPopupOpen() {
+  return document.querySelector(".confirmation-popup") !== null;
+}
+
 
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
@@ -68,10 +115,10 @@ function listenForClicks() {
 
     function reset(tabs) {
       resetInputs();
-      if(!error)
-      browser.tabs.sendMessage(tabs[0].id, {
-        command: "stop",
-      });
+      if (!error)
+        browser.tabs.sendMessage(tabs[0].id, {
+          command: "stop",
+        });
     }
 
     /**
@@ -81,8 +128,8 @@ function listenForClicks() {
       console.error(`Error: ${error}`);
     }
 
-    if (e.target.tagName !== "BUTTON" || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
-      // Ignore when click is not on a button within <div id="popup-content">.
+    if (e.target.tagName !== "BUTTON" || isConfirmationPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
+      // Ignore when click is not on a button within <div id="popup-content"> etc
       return;
     }
     if (e.target.id === "settings-button") {
@@ -102,6 +149,21 @@ function listenForClicks() {
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+    }
+    else if (e.target.id === "hard-reset-button") {
+      showConfirmationPopup("Are you sure you want to restore the original default values?").then((response) => {
+        if (response === "yes") {
+          getJsonConfig().then(() => {
+            document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
+            document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
+            document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+            settingsContent.classList.toggle("show");
+          }
+          );
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
     }
     else if (e.target.id === "reset-button") {
       browser.tabs.query({ active: true, currentWindow: true })
