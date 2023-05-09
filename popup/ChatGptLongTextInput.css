@@ -107,6 +107,13 @@ button:hover {
   transition: all 0.2s ease-in-out;
 }
 
+#file-button{
+  padding:3px;
+  margin-top:0px;
+  margin-bottom: 0px;
+  font-size:.75em;
+}
+
 #settings-button {
   width: 32px;
   height: 32px;
