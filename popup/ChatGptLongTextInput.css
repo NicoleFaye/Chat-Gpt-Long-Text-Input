@@ -79,6 +79,7 @@ input {
 
 textarea {
   font-size: .85em;
+  height: 280px;
 }
 
 input:focus,
