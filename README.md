@@ -14,5 +14,6 @@
     - pdf 
     - docx
 - more formatting options in regards to newlines and whitespace
+- Ability to add custom buttons next to the "regenerate response" button 
 
 ## Feel free to make suggestions in the issues section
