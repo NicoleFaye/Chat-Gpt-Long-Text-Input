@@ -4,8 +4,8 @@
 ### [Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)
  
 ### Screencap:
-![Popup](https://user-images.githubusercontent.com/41876584/236659627-75b9716f-8cbb-4765-af0e-10312cf89586.png)
-![Settings](https://user-images.githubusercontent.com/41876584/236659628-e416401f-d8db-4df4-b4ae-fd74e138b1dd.png)
+![Popup](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/mainPage.png)
+![Settings](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/settingsPage.png)
 
 # Planned Features:
 - ablility to import file directly
@@ -14,5 +14,6 @@
     - pdf 
     - docx
 - more formatting options in regards to newlines and whitespace
+- Ability to add custom buttons next to the "regenerate response" button 
 
 ## Feel free to make suggestions in the issues section
