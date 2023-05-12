@@ -3,11 +3,11 @@ var config = {};
 var defaultValues = {};
 var error = false;
 var checkForFile;
-if(localStorage.getItem("file-pick")){
-  checkForFile=localStorage.getItem("file-pick");
+if (localStorage.getItem("file-pick")) {
+  checkForFile = localStorage.getItem("file-pick");
 }
-else{
-  checkForFile=false;
+else {
+  checkForFile = false;
 }
 
 async function getConfig() {
@@ -49,9 +49,11 @@ const settingsContent = document.getElementById("settings-content");
 const popupContent = document.getElementById("popup-content");
 
 
-if(checkForFile){
-  checkForFile=false;
-
+if (checkForFile) {
+  checkForFile = false;
+  var filePath = localStorage.getItem("filePath");
+  console.log("filepath:");
+  console.log(filePath);
 }
 
 
@@ -152,13 +154,15 @@ function listenForClicks() {
     else if (e.target.id === "close-button") {
       settingsContent.classList.toggle("show");
     }
-    else if (e.target.id === "file-button"){
-      if(!error){
-        localStorage.setItem("file-pick",true);
-        browser.tabs.sendMessage(tabs[0].id,{
-          command: "file-input",
-        });
-      }else{
+    else if (e.target.id === "file-button") {
+      if (!error) {
+        localStorage.setItem("file-pick", true);
+        browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+          browser.tabs.sendMessage(tabs[0].id, {
+            command: "file-pick",
+          });
+        })
+      } else {
         //todo make popup saying u gotta be on the right site.
       }
       //todo add this to content script 
@@ -179,9 +183,9 @@ function listenForClicks() {
        * 
        *          Bed time. zzzzz
        */
-      const filepickerInput = document.getElementById('filepicker-input');
-        //<input type="file" id="filepicker-input" accept=".txt" style="display: none;"></input>
-      filepickerInput.click();
+      //const filepickerInput = document.getElementById('filepicker-input');
+      //<input type="file" id="filepicker-input" accept=".txt" style="display: none;"></input>
+      //filepickerInput.click();
     }
     else if (e.target.id === "save-button") {
       settingsContent.classList.toggle("show");
