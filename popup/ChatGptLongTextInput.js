@@ -159,27 +159,6 @@ function listenForClicks() {
       } else {
         //todo make popup saying u gotta be on the right site.
       }
-      //todo add this to content script 
-      /**
-       * Event sequence
-       * -.1 check that we are on chat website, maybe use injection script error method to indicate
-       *          notify user filepicker must be used on correct website
-       * -1 toggle variable to indicate next open needs to retreive a file if there is one
-       * -2 send signal to content script to open file picker
-       * 3 content script saves the path as a string if given one, or nothing if not. 
-       * 4 user reopens popup, variable is flipped, check for successful file pick
-       * 5 if path contains a filepath attempt to open the file
-       * 6 handle error if there is one, popup of some kind, maybe make error popup based on confirmation popup
-       *          if no error then read file contents to the text box, make sure to check for errors or file headers?
-       *          need to research method for detecting if a file is something like .docx or .pdf other than the filename.
-       *          maybe just check filename instead.
-       *  
-       * 
-       *          Bed time. zzzzz
-       */
-      //const filepickerInput = document.getElementById('filepicker-input');
-      //<input type="file" id="filepicker-input" accept=".txt" style="display: none;"></input>
-      //filepickerInput.click();
     }
     else if (e.target.id === "save-button") {
       settingsContent.classList.toggle("show");
@@ -245,9 +224,17 @@ console.log("here");
 console.log(checkForFile);
 if (checkForFile) {
   checkForFile = false;
-  var fileText= localStorage.getItem("importFile");
-  console.log(fileText);
-  document.getElementById("textInput").value=fileText;
+browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+  browser.tabs.sendMessage(tabs[0].id, { command: "file-get" });
+});
+
+browser.runtime.onMessage.addListener((message) => {
+  if (message.command === "file-get") {
+    const fileContent = message.content;
+    document.getElementById("textInput").value=fileContent;
+  }
+});
+
 }
 
 /**
