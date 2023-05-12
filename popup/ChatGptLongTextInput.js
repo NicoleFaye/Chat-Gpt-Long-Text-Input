@@ -49,12 +49,6 @@ const settingsContent = document.getElementById("settings-content");
 const popupContent = document.getElementById("popup-content");
 
 
-if (checkForFile) {
-  checkForFile = false;
-  var filePath = localStorage.getItem("filePath");
-  console.log("filepath:");
-  console.log(filePath);
-}
 
 
 function resetInputs() {
@@ -245,6 +239,15 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[0].value = storedData.mainPrompt;
   document.body.getElementsByTagName("input")[1].value = storedData.messagePrepend;
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
+}
+
+console.log("here");
+console.log(checkForFile);
+if (checkForFile) {
+  checkForFile = false;
+  var fileText= localStorage.getItem("importFile");
+  console.log(fileText);
+  document.getElementById("textInput").value=fileText;
 }
 
 /**
