@@ -2,13 +2,6 @@
 var config = {};
 var defaultValues = {};
 var error = false;
-var checkForFile;
-if (localStorage.getItem("file-pick")) {
-  checkForFile = localStorage.getItem("file-pick");
-}
-else {
-  checkForFile = false;
-}
 
 async function getConfig() {
   // Check if default values are already stored in local storage
@@ -150,7 +143,6 @@ function listenForClicks() {
     }
     else if (e.target.id === "file-button") {
       if (!error) {
-        localStorage.setItem("file-pick", true);
         browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
           browser.tabs.sendMessage(tabs[0].id, {
             command: "file-pick",
@@ -220,22 +212,19 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
 }
 
-console.log("here");
-console.log(checkForFile);
-if (checkForFile) {
-  checkForFile = false;
-browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
-  browser.tabs.sendMessage(tabs[0].id, { command: "file-get" });
-});
+  browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+    browser.tabs.sendMessage(tabs[0].id, { command: "file-get" });
+  });
 
-browser.runtime.onMessage.addListener((message) => {
-  if (message.command === "file-get") {
-    const fileContent = message.content;
-    document.getElementById("textInput").value=fileContent;
-  }
-});
+  browser.runtime.onMessage.addListener((message) => {
+    if (message.command === "file-get") {
+      const fileContent = message.content;
+      console.log(fileContent);
+      if (fileContent !== "")
+        document.getElementById("textInput").value = fileContent;
+    }
+  });
 
-}
 
 /**
  * There was an error executing the script.
