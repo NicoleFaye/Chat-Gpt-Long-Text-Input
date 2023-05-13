@@ -53,7 +53,37 @@ function resetInputs() {
 }
 
 
-function showConfirmationPopup(message) {
+function showConfirmationPopupOkay(message) {
+  return new Promise((resolve, reject) => {
+    const popup = document.createElement("div");
+    popup.classList.add("confirmation-popup");
+
+    const popupMessage = document.createElement("p");
+    popupMessage.classList.add("confirmation-text");
+    popupMessage.textContent = message;
+    popup.appendChild(popupMessage);
+
+    const okayButton = document.createElement("button");
+    okayButton.textContent = "Okay";
+    okayButton.addEventListener("click", () => {
+      popup.remove();
+      resolve();
+    });
+    popup.appendChild(okayButton);
+
+    document.body.appendChild(popup);
+
+    // Position the popup in the center of the screen
+    const popupWidth = popup.offsetWidth;
+    const popupHeight = popup.offsetHeight;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    popup.style.left = (screenWidth - popupWidth) / 2 + "px";
+    popup.style.top = (screenHeight - popupHeight) / 2 + "px";
+  });
+}
+
+function showConfirmationPopupYesNo(message) {
   return new Promise((resolve, reject) => {
     const popup = document.createElement("div");
     popup.classList.add("confirmation-popup");
@@ -162,7 +192,7 @@ function listenForClicks() {
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
     }
     else if (e.target.id === "hard-reset-button") {
-      showConfirmationPopup("Are you sure you want to restore the original default values?").then((response) => {
+      showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
         if (response === "yes") {
           getJsonConfig().then(() => {
             document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
