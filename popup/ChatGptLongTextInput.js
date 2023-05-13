@@ -91,7 +91,7 @@ function showConfirmationPopup(message) {
   });
 }
 
-function isConfirmationPopupOpen() {
+function isPopupOpen() {
   return document.querySelector(".confirmation-popup") !== null;
 }
 
@@ -128,7 +128,7 @@ function listenForClicks() {
       console.error(`Error: ${error}`);
     }
 
-    if (e.target.tagName !== "BUTTON" || isConfirmationPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
+    if (e.target.tagName !== "BUTTON" || isPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
       // Ignore when click is not on a button within <div id="popup-content"> etc
       return;
     }
@@ -219,7 +219,6 @@ if (storedData !== null) {
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "file-get") {
       const fileContent = message.content;
-      console.log(fileContent);
       if (fileContent !== "")
         document.getElementById("textInput").value = fileContent;
     }
