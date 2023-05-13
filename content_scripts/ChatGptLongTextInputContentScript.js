@@ -149,14 +149,16 @@
       filePickerButton.style.backgroundSize = "contain";
       filePickerButton.style.backgroundRepeat = "no-repeat";
       filePickerButton.style.backgroundPosition = "center";
+      filePickerButton.style.backgroundColor = "transparent";
       filePickerButton.style.border = "none";
       filePickerButton.style.height = "32px";
       filePickerButton.style.width = "32px";
       filePickerButton.style.alignSelf = "center";
 
-      if (buttonContainer.hasChildNodes) {
-        if (!(buttonContainer.firstChild.id === "File-Picker-Button"))
+      if (buttonContainer.hasChildNodes()) {
+        if (buttonContainer.firstChild.id !== "File-Picker-Button"){
           buttonContainer.insertBefore(filePickerButton, buttonContainer.firstChild);
+        }
       } else {
         buttonContainer.appendChild(filePickerButton);
       }
