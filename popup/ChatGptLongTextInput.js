@@ -247,7 +247,7 @@ chrome.runtime.onMessage.addListener((message) => {
 
 
 function reportError(err) {
-  console.error(err);
+  //console.error(err);
 }
 
 
