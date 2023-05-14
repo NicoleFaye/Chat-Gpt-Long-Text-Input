@@ -49,6 +49,11 @@ button {
   margin-left: auto;
 }
 
+.centered-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 input,
 textarea {
@@ -79,6 +84,7 @@ input {
 
 textarea {
   font-size: .85em;
+  height: 280px;
 }
 
 input:focus,
@@ -104,6 +110,13 @@ button:hover {
   background-repeat: no-repeat;
   background-position: center;
   transition: all 0.2s ease-in-out;
+}
+
+#file-button{
+  padding:3px;
+  margin-top:0px;
+  margin-bottom: 0px;
+  font-size:.75em;
 }
 
 #settings-button {
@@ -183,4 +196,6 @@ button[type="reset"] {
 
 .confirmation-text{
   margin: 8px;
+  font-size: 1.1em;
 }
+
