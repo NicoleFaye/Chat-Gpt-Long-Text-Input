@@ -205,7 +205,7 @@ function listenForClicks() {
       chrome.tabs.query({ active: true, currentWindow: true })
         .then(reset)
         .catch(reportError);
-    } else if (!error) {
+    } else {
       chrome.tabs.query({ active: true, currentWindow: true })
         .then(run)
         .catch(reportError);
@@ -247,7 +247,7 @@ chrome.runtime.onMessage.addListener((message) => {
 
 
 function reportError(err) {
-  //console.error(err);
+  console.error(err);
 }
 
 
@@ -258,7 +258,7 @@ function handleBrowserAction() {
 }
 function injectScript(tabs) {
   try{
-  chrome.tabs.executeScript(tabs[0].id, {file: "/content_scripts/ChatGptLongTextInputContentScript.js"});
+  chrome.scripting.executeScript({target: {tabId:tabs[0].id}, files: ["/content_scripts/ChatGptLongTextInputContentScript.js"]});
   chrome.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
   }
   catch(error){

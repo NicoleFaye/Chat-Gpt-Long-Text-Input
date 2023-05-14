@@ -105,16 +105,17 @@
   });
 
   chrome.runtime.onMessage.addListener((message) => {
+    console.log(message);
     if (message.command === "run") {
       cancel = false;
       run(message);
     } else if (message.command === "file-get") {
       if (localStorage.getItem("importFile-new") === "true") {
         const fileContent = localStorage.getItem("importFile");
-        browser.runtime.sendMessage({ command: "file-get", content: fileContent });
+        chrome.runtime.sendMessage({ command: "file-get", content: fileContent });
         localStorage.setItem("importFile-new","false");
       } else{
-        browser.runtime.sendMessage({ command: "file-get", content: ""});
+        chrome.runtime.sendMessage({ command: "file-get", content: ""});
       }
     } else if (message.command === "stop") {
       cancel = true;
@@ -141,7 +142,7 @@
       var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
       var filePickerButton = document.createElement("button");
       filePickerButton.classList.add(...config.regenerateResponseButtonClassString.split(' '));
-      const imageUrl = browser.runtime.getURL('/icons/Red32.png');
+      const imageUrl = chrome.runtime.getURL('/icons/Red32.png');
       filePickerButton.id = "File-Picker-Button";
       filePickerButton.style.backgroundImage = `url("${imageUrl}")`;
       filePickerButton.style.backgroundSize = "contain";
