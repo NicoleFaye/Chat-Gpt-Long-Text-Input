@@ -1,7 +1,5 @@
-// Load the JSON config file
 var config = {};
 var defaultValues = {};
-var error = false;
 
 async function getConfig() {
   // Check if default values are already stored in local storage
@@ -65,6 +63,7 @@ function showConfirmationPopupOkay(message) {
 
     const okayButton = document.createElement("button");
     okayButton.textContent = "Okay";
+    okayButton.classList.add("centered-button");
     okayButton.addEventListener("click", () => {
       popup.remove();
       resolve();
@@ -145,18 +144,11 @@ function listenForClicks() {
 
     function reset(tabs) {
       resetInputs();
-      if (!error)
         browser.tabs.sendMessage(tabs[0].id, {
           command: "stop",
-        });
+        }).catch(reportError);
     }
 
-    /**
-     * Just log the error to the console.
-     */
-    function reportError(error) {
-      console.error(`Error: ${error}`);
-    }
 
     if (e.target.tagName !== "BUTTON" || isPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
       // Ignore when click is not on a button within <div id="popup-content"> etc
@@ -172,15 +164,15 @@ function listenForClicks() {
       settingsContent.classList.toggle("show");
     }
     else if (e.target.id === "file-button") {
-      if (!error) {
         browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
           browser.tabs.sendMessage(tabs[0].id, {
             command: "file-pick",
-          });
-        })
-      } else {
-        //todo make popup saying u gotta be on the right site.
-      }
+        }).catch(()=>{
+          showConfirmationPopupOkay("test");
+        });
+        }).catch((error) => {
+          reportError(error);
+        });
     }
     else if (e.target.id === "save-button") {
       settingsContent.classList.toggle("show");
@@ -242,41 +234,35 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
 }
 
-  browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
-    browser.tabs.sendMessage(tabs[0].id, { command: "file-get" });
-  });
 
-  browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "file-get") {
-      const fileContent = message.content;
-      if (fileContent !== "")
-        document.getElementById("textInput").value = fileContent;
-    }
-  });
+browser.runtime.onMessage.addListener((message) => {
+  if (message.command === "file-get") {
+    const fileContent = message.content;
+    if (fileContent !== "")
+      document.getElementById("textInput").value = fileContent;
+  }
+});
 
 
-/**
- * There was an error executing the script.
- * Display the popup's error message, and hide the normal UI.
- */
-function reportExecuteScriptError(err) {
-  //document.querySelector("#popup-content").classList.add("hidden");
-  //document.querySelector("#error-content").classList.remove("hidden");
-  console.error(`Failed to execute content script: ${err.message}`);
-  error = true;
+function reportError(err) {
+  //console.error(err);
 }
 
-/**
- * When the popup loads, inject a content script into the active tab,
- * and add a click handler.
- * If we couldn't inject the script, handle the error.
- */
 
-try {
+function handleBrowserAction() {
+  browser.tabs.query({ active: true, currentWindow: true })
+    .then(injectScript);
   listenForClicks();
-} catch (err) {
-  console.error("An error occurred in listenForClicks:", err);
+}
+function injectScript(tabs) {
+  try{
+  browser.tabs.executeScript(tabs[0].id, {file: "/content_scripts/ChatGptLongTextInputContentScript.js"});
+  browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
+  }
+  catch(error){
+    reportError(error);
+  }
 }
 
-browser.tabs.executeScript({ file: "/content_scripts/ChatGptLongTextInputContentScript.js" })
-  .catch(reportExecuteScriptError);
+
+handleBrowserAction();
