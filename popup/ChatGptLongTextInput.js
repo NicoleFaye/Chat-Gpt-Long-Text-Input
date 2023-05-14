@@ -51,7 +51,7 @@ function resetInputs() {
   document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
 }
 function reportError(error) {
-  console.error(`Error: ${error}`);
+  //console.error(`Error: ${error}`);
 }
 
 

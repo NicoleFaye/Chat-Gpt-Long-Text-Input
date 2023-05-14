@@ -105,7 +105,6 @@
   });
 
   chrome.runtime.onMessage.addListener((message) => {
-    console.log(message);
     if (message.command === "run") {
       cancel = false;
       run(message);
@@ -153,7 +152,6 @@
       filePickerButton.style.height = "32px";
       filePickerButton.style.width = "32px";
       filePickerButton.style.alignSelf = "center";
-      console.log(filePickerButton);
 
       if (buttonContainer.hasChildNodes()) {
         if (buttonContainer.firstChild.id !== "File-Picker-Button"){
