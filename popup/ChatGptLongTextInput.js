@@ -202,7 +202,7 @@ function listenForClicks() {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(reset)
         .catch(reportError);
-    } else if (!error) {
+    } else {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(run)
         .catch(reportError);
