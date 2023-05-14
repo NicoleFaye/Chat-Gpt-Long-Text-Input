@@ -24,10 +24,17 @@
       <label for="messageAppend">After each addition:</label>
       <input id="messageAppend" type="text"
         value="(Document ends here) Respond to this message with only the word: 'Confirmed.'" autocomplete="off" />
-      <label for="textInput">Text to import:</label>
+      <div class="button-container">
+        <label for="textInput">Text to import:</label>
+        <button id="file-button">Enable File Picker Button</button>
+      </div>
       <textarea id="textInput"></textarea>
 
     </div>
+
+
+
+    
     <div id="settings-content" class="">
       <div class="button-container">
         <p>Default Values</p>
@@ -39,10 +46,10 @@
       <input id="defaultPrepend" type="text" autocomplete="off" />
       <label for="defaultAppend">After each addition:</label>
       <input id="defaultAppend" type="text" autocomplete="off" />
+      <div class="button-container">
       <button type="save" id="save-button">Save</button>
-    </div>
-    <div id="error-content" class="hidden">
-      <p>Try a different page.</p>
+      <button type="hard-reset" id="hard-reset-button">Hard Reset</button>
+      </div>
     </div>
     <script src="ChatGptLongTextInput.js"></script>
   </body>

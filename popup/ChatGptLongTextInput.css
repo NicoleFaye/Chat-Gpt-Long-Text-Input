@@ -50,6 +50,11 @@ button {
   padding-right: 5em;
 }
 
+.centered-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 input,
 textarea {
@@ -80,6 +85,7 @@ input {
 
 textarea {
   font-size: 1em;
+  height: 280px;
 }
 
 input:focus,
@@ -105,6 +111,13 @@ button:hover {
   background-repeat: no-repeat;
   background-position: center;
   transition: all 0.2s ease-in-out;
+}
+
+#file-button{
+  padding:3px;
+  margin-top:0px;
+  margin-bottom: 0px;
+  font-size:.75em;
 }
 
 #settings-button {
@@ -140,7 +153,13 @@ button[type="reset"] {
   width: 25%;
 }
 
-button[type="reset"]:hover {
+#hard-reset-button{
+  background-color: #9a0707e7;
+  width: 35%;
+
+}
+
+#hard-reset-button:hover,button[type="reset"]:hover {
   background-color: #660000;
 }
 
@@ -164,3 +183,20 @@ button[type="reset"]:hover {
 #settings-content.show {
   top: 0;
 }
+
+
+.confirmation-popup {
+  position: absolute;
+  width: 75%;
+  z-index: 9999;
+  background-color: #333;
+  border-radius: 10px;
+  border: 3px solid #1e1e1e;
+  /* Add other styles for the popup here */
+}
+
+.confirmation-text{
+  margin: 8px;
+  font-size: 1.1em;
+}
+

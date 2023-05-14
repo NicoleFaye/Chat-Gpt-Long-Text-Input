@@ -1,7 +1,5 @@
-// Load the JSON config file
 var config = {};
 var defaultValues = {};
-var error = false;
 
 async function getConfig() {
   // Check if default values are already stored in local storage
@@ -15,30 +13,33 @@ async function getConfig() {
     };
   } else {
     // Otherwise, fetch default values from config.json
-    const response = await fetch(chrome.runtime.getURL('config.json'));
-    const newConfig = await response.json();
-    config = newConfig;
-    defaultValues = {
-      textToImport: "",
-      mainPrompt: config.mainPrompt,
-      messagePrepend: config.messagePrepend,
-      messageAppend: config.messageAppend,
-      textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
-    };
-    localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
-    localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
-    localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+    getJsonConfig();
   }
   resetInputs();
 }
 
+async function getJsonConfig() {
+  const response = await fetch(chrome.runtime.getURL('config.json'));
+  const newConfig = await response.json();
+  config = newConfig;
+  defaultValues = {
+    textToImport: "",
+    mainPrompt: config.mainPrompt,
+    messagePrepend: config.messagePrepend,
+    messageAppend: config.messageAppend,
+    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+  };
+  localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
+  localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
+  localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+}
 
 getConfig();
-
 
 const settingsButton = document.getElementById("settings-button");
 const settingsContent = document.getElementById("settings-content");
 const popupContent = document.getElementById("popup-content");
+
 
 
 
@@ -52,6 +53,81 @@ function resetInputs() {
 function reportError(error) {
   console.error(`Error: ${error}`);
 }
+
+
+function showConfirmationPopupOkay(message) {
+  return new Promise((resolve, reject) => {
+    const popup = document.createElement("div");
+    popup.classList.add("confirmation-popup");
+
+    const popupMessage = document.createElement("p");
+    popupMessage.classList.add("confirmation-text");
+    popupMessage.textContent = message;
+    popup.appendChild(popupMessage);
+
+    const okayButton = document.createElement("button");
+    okayButton.textContent = "Okay";
+    okayButton.classList.add("centered-button");
+    okayButton.addEventListener("click", () => {
+      popup.remove();
+      resolve();
+    });
+    popup.appendChild(okayButton);
+
+    document.body.appendChild(popup);
+
+    // Position the popup in the center of the screen
+    const popupWidth = popup.offsetWidth;
+    const popupHeight = popup.offsetHeight;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    popup.style.left = (screenWidth - popupWidth) / 2 + "px";
+    popup.style.top = (screenHeight - popupHeight) / 2 + "px";
+  });
+}
+
+function showConfirmationPopupYesNo(message) {
+  return new Promise((resolve, reject) => {
+    const popup = document.createElement("div");
+    popup.classList.add("confirmation-popup");
+
+    const popupMessage = document.createElement("p");
+    popupMessage.classList.add("confirmation-text");
+    popupMessage.textContent = message;
+    popup.appendChild(popupMessage);
+
+    const yesButton = document.createElement("button");
+    yesButton.textContent = "Yes";
+    yesButton.addEventListener("click", () => {
+      popup.remove();
+      resolve("yes");
+    });
+    popup.appendChild(yesButton);
+
+    const noButton = document.createElement("button");
+    noButton.textContent = "No";
+    noButton.addEventListener("click", () => {
+      popup.remove();
+      resolve("no");
+    });
+    popup.appendChild(noButton);
+
+    document.body.appendChild(popup);
+
+    // Position the popup in the center of the screen
+    const popupWidth = popup.offsetWidth;
+    const popupHeight = popup.offsetHeight;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    popup.style.left = (screenWidth - popupWidth) / 2 + "px";
+    popup.style.top = (screenHeight - popupHeight) / 2 + "px";
+  });
+}
+
+function isPopupOpen() {
+  return document.querySelector(".confirmation-popup") !== null;
+}
+
 
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
@@ -71,19 +147,14 @@ function listenForClicks() {
 
     function reset(tabs) {
       resetInputs();
-      if (!error)
         chrome.tabs.sendMessage(tabs[0].id, {
           command: "stop",
-        });
-
+        }).catch(reportError);
     }
 
-    /**
-     * Just log the error to the console.
-     */
 
-    if (e.target.tagName !== "BUTTON" || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
-      // Ignore when click is not on a button within <div id="popup-content">.
+    if (e.target.tagName !== "BUTTON" || isPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
+      // Ignore when click is not on a button within <div id="popup-content"> etc
       return;
     }
     if (e.target.id === "settings-button") {
@@ -95,6 +166,17 @@ function listenForClicks() {
     else if (e.target.id === "close-button") {
       settingsContent.classList.toggle("show");
     }
+    else if (e.target.id === "file-button") {
+        chrome.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+          chrome.tabs.sendMessage(tabs[0].id, {
+            command: "file-pick",
+        }).catch(()=>{
+          showConfirmationPopupOkay("Try again with ChatGpt open.");
+        });
+        }).catch((error) => {
+          reportError(error);
+        });
+    }
     else if (e.target.id === "save-button") {
       settingsContent.classList.toggle("show");
       defaultValues.mainPrompt = document.getElementById("defaultMainPrompt").value;
@@ -103,6 +185,21 @@ function listenForClicks() {
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+    }
+    else if (e.target.id === "hard-reset-button") {
+      showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
+        if (response === "yes") {
+          getJsonConfig().then(() => {
+            document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
+            document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
+            document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+            settingsContent.classList.toggle("show");
+          }
+          );
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
     }
     else if (e.target.id === "reset-button") {
       chrome.tabs.query({ active: true, currentWindow: true })
@@ -139,34 +236,35 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
 }
 
-/**
- * There was an error executing the script.
- * Display the popup's error message, and hide the normal UI.
- */
-function reportExecuteScriptError(err) {
-  //document.querySelector("#popup-content").classList.add("hidden");
-  //document.querySelector("#error-content").classList.remove("hidden");
-  console.log(`Failed to execute content script: ${err.message}`);
-  error = true;
-}
 
-//Chrome inject method 
-function injectScript(tabs) {
-  chrome.scripting.executeScript({
-    target: { tabId: tabs[0].id },
-    files: ["/content_scripts/ChatGptLongTextInputContentScript.js"]
-  })
-    .catch(reportExecuteScriptError);
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.command === "file-get") {
+    const fileContent = message.content;
+    if (fileContent !== "")
+      document.getElementById("textInput").value = fileContent;
+  }
+});
+
+
+function reportError(err) {
+  //console.error(err);
 }
 
 
-try {
+function handleBrowserAction() {
+  chrome.tabs.query({ active: true, currentWindow: true })
+    .then(injectScript);
   listenForClicks();
-} catch (err) {
-  console.error("An error occurred in listenForClicks:", err);
+}
+function injectScript(tabs) {
+  try{
+  chrome.tabs.executeScript(tabs[0].id, {file: "/content_scripts/ChatGptLongTextInputContentScript.js"});
+  chrome.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
+  }
+  catch(error){
+    reportError(error);
+  }
 }
 
-//Chrome inject method
-chrome.tabs.query({ active: true, currentWindow: true })
-  .then(injectScript)
-  .catch(reportError);
+
+handleBrowserAction();
