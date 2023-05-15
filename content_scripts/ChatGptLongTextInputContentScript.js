@@ -29,7 +29,6 @@ getConfig();
 
 
   async function sendMessages(message) {
-    console.log(message);
     subStrings = splitString(message.textToImport, message.maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
@@ -49,7 +48,6 @@ getConfig();
     if (document.getElementsByTagName("textarea")[0] === undefined) return;
     document.body.getElementsByTagName("textarea")[0].value = messageText;
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
-    //sendMessageButtonClick();
   }
 
   function run(message) {
