@@ -13,7 +13,6 @@
   let cancel = false;
 
 var config;
-var maxMessageLength;
 var timeout_ms;
 
 
@@ -23,7 +22,6 @@ var timeout_ms;
   config = await response.json();
 
   // Replace the constants with the values from the config file
-  maxMessageLength = config.maxMessageLength;
   timeout_ms = config.timeout;
 }
 
@@ -31,7 +29,8 @@ getConfig();
 
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport, maxMessageLength);
+    console.log(message);
+    subStrings = splitString(message.textToImport, message.maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
@@ -118,7 +117,6 @@ getConfig();
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "run") {
       cancel = false;
-      getConfig();
       run(message);
     } else if (message.command === "file-get") {
       if (localStorage.getItem("importFile-new") === "true") {

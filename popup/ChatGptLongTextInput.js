@@ -137,6 +137,7 @@ function listenForClicks() {
     function run(tabs) {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "run",
+        maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
         textToImport: document.body.getElementsByTagName("textarea")[0].value,
         mainPrompt: document.body.getElementsByTagName("input")[0].value,
         messagePrepend: document.body.getElementsByTagName("input")[1].value,
