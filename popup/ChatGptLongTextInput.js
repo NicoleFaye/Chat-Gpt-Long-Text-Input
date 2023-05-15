@@ -184,6 +184,7 @@ function listenForClicks() {
       defaultValues.mainPrompt = document.getElementById("defaultMainPrompt").value;
       defaultValues.messagePrepend = document.getElementById("defaultPrepend").value;
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
+      defaultValues.maxMessageLength = document.getElementById("defaultMaxMessageLength").value;
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
