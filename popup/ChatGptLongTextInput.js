@@ -163,7 +163,6 @@ function listenForClicks() {
       document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
       document.getElementById("defaultAppend").value = defaultValues.messageAppend;
       document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
-      console.log(defaultValues);
     }
     else if (e.target.id === "close-button") {
       settingsContent.classList.toggle("show");
