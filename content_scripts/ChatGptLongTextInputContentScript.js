@@ -12,13 +12,22 @@
   url = window.location.href;
   let cancel = false;
 
+var config;
+var maxMessageLength;
+var timeout_ms;
+
+
+  async function getConfig(){
   // Load the JSON config file
   const response = await fetch(browser.runtime.getURL('config.json'));
-  const config = await response.json();
+  config = await response.json();
 
   // Replace the constants with the values from the config file
-  const maxMessageLength = config.maxMessageLength;
-  const timeout_ms = config.timeout;
+  maxMessageLength = config.maxMessageLength;
+  timeout_ms = config.timeout;
+}
+
+getConfig();
 
 
   async function sendMessages(message) {
@@ -109,6 +118,7 @@
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "run") {
       cancel = false;
+      getConfig();
       run(message);
     } else if (message.command === "file-get") {
       if (localStorage.getItem("importFile-new") === "true") {
