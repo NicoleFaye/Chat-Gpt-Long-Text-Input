@@ -12,16 +12,23 @@
   url = window.location.href;
   let cancel = false;
 
+var config;
+var timeout_ms;
+
+
+  async function getConfig(){
   // Load the JSON config file
   const response = await fetch(chrome.runtime.getURL('config.json'));
-  const config = await response.json();
+  config = await response.json();
   // Replace the constants with the values from the config file
-  const maxMessageLength = config.maxMessageLength;
-  const timeout_ms = config.timeout;
+  timeout_ms = config.timeout;
+}
+
+getConfig();
 
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport, maxMessageLength);
+    subStrings = splitString(message.textToImport, message.maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;

@@ -3,13 +3,14 @@ var defaultValues = {};
 
 async function getConfig() {
   // Check if default values are already stored in local storage
-  if (localStorage.getItem('defaultMainPrompt') && localStorage.getItem('defaultMessagePrepend') && localStorage.getItem('defaultMessageAppend')) {
+  if (localStorage.getItem('defaultMainPrompt') && localStorage.getItem('defaultMessagePrepend') && localStorage.getItem('defaultMessageAppend') && localStorage.getItem("defaultMaxMessageLength")) {
     defaultValues = {
       textToImport: "",
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
       textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+      maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
     };
   } else {
     // Otherwise, fetch default values from config.json
@@ -28,10 +29,12 @@ async function getJsonConfig() {
     messagePrepend: config.messagePrepend,
     messageAppend: config.messageAppend,
     textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+    maxMessageLength: config.maxMessageLength,
   };
   localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
   localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
   localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+  localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
 }
 
 getConfig();
@@ -138,6 +141,7 @@ function listenForClicks() {
     function run(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {
         command: "run",
+        maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
         textToImport: document.body.getElementsByTagName("textarea")[0].value,
         mainPrompt: document.body.getElementsByTagName("input")[0].value,
         messagePrepend: document.body.getElementsByTagName("input")[1].value,
@@ -162,6 +166,7 @@ function listenForClicks() {
       document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
       document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
       document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+      document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
     }
     else if (e.target.id === "close-button") {
       settingsContent.classList.toggle("show");
@@ -182,9 +187,11 @@ function listenForClicks() {
       defaultValues.mainPrompt = document.getElementById("defaultMainPrompt").value;
       defaultValues.messagePrepend = document.getElementById("defaultPrepend").value;
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
+      defaultValues.maxMessageLength = document.getElementById("defaultMaxMessageLength").value;
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
+      localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
     }
     else if (e.target.id === "hard-reset-button") {
       showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
@@ -193,6 +200,7 @@ function listenForClicks() {
             document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
             document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
             document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+            document.getElementById("defaultMaxMessageLength").value=defaultValues.maxMessageLength;
             settingsContent.classList.toggle("show");
           }
           );
