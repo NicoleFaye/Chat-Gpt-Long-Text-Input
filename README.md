@@ -12,8 +12,8 @@
 
 # Planned Features:
 - ablility to import file directly
-    - ~~txt~~
-    - ~~csv~~
+    - ~~txt~~ (completed)
+    - ~~csv~~ (completed)
     - pdf 
     - docx
 - more formatting options in regards to newlines and whitespace
