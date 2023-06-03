@@ -12,20 +12,20 @@
   url = window.location.href;
   let cancel = false;
 
-var config;
-var timeout_ms;
+  var config;
+  var timeout_ms;
 
 
-  async function getConfig(){
-  // Load the JSON config file
-  const response = await fetch(browser.runtime.getURL('config.json'));
-  config = await response.json();
+  async function getConfig() {
+    // Load the JSON config file
+    const response = await fetch(browser.runtime.getURL('config.json'));
+    config = await response.json();
 
-  // Replace the constants with the values from the config file
-  timeout_ms = config.timeout;
-}
+    // Replace the constants with the values from the config file
+    timeout_ms = config.timeout;
+  }
 
-getConfig();
+  getConfig();
 
 
   async function sendMessages(message) {
@@ -45,8 +45,16 @@ getConfig();
   }
 
   function sendChatGPTMessage(messageText) {
-    if (document.getElementsByTagName("textarea")[0] === undefined) return;
+    if (document.getElementsByTagName("textarea")[0] === undefined){ 
+      console.log("failure");
+      return;
+    }
     document.body.getElementsByTagName("textarea")[0].value = messageText;
+    let event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+        });
+    document.body.getElementsByTagName("textarea")[0].dispatchEvent(event);
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
   }
 
@@ -109,7 +117,8 @@ getConfig();
     keyCode: 13,
     which: 13,
     bubbles: true,
-    cancelable: true
+    cancelable: true,
+    isTrusted: true,
   });
 
   browser.runtime.onMessage.addListener((message) => {
@@ -120,9 +129,9 @@ getConfig();
       if (localStorage.getItem("importFile-new") === "true") {
         const fileContent = localStorage.getItem("importFile");
         browser.runtime.sendMessage({ command: "file-get", content: fileContent });
-        localStorage.setItem("importFile-new","false");
-      } else{
-        browser.runtime.sendMessage({ command: "file-get", content: ""});
+        localStorage.setItem("importFile-new", "false");
+      } else {
+        browser.runtime.sendMessage({ command: "file-get", content: "" });
       }
     } else if (message.command === "stop") {
       cancel = true;
@@ -162,7 +171,7 @@ getConfig();
       filePickerButton.style.alignSelf = "center";
 
       if (buttonContainer.hasChildNodes()) {
-        if (buttonContainer.firstChild.id !== "File-Picker-Button"){
+        if (buttonContainer.firstChild.id !== "File-Picker-Button") {
           buttonContainer.insertBefore(filePickerButton, buttonContainer.firstChild);
         }
       } else {
