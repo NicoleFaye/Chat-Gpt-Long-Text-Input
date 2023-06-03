@@ -4,7 +4,7 @@
 |Platform|Current version|
 |------------------|-----|
 |[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.4.3 |
-|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.1|
+|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.3 |
 
 ### Screencap:
 ![Popup](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/mainPage.png)
@@ -12,8 +12,8 @@
 
 # Planned Features:
 - ablility to import file directly
-    - ~~txt~~
-    - ~~csv~~
+    - ~~txt~~ (completed)
+    - ~~csv~~ (completed)
     - pdf 
     - docx
 - more formatting options in regards to newlines and whitespace

@@ -12,8 +12,8 @@
   url = window.location.href;
   let cancel = false;
 
-var config;
-var timeout_ms;
+  var config;
+  var timeout_ms;
 
 
   async function getConfig(){
@@ -24,7 +24,7 @@ var timeout_ms;
   timeout_ms = config.timeout;
 }
 
-getConfig();
+  getConfig();
 
 
   async function sendMessages(message) {
@@ -44,8 +44,16 @@ getConfig();
   }
 
   function sendChatGPTMessage(messageText) {
-    if (document.getElementsByTagName("textarea")[0] === undefined) return;
+    if (document.getElementsByTagName("textarea")[0] === undefined){ 
+      console.log("failure");
+      return;
+    }
     document.body.getElementsByTagName("textarea")[0].value = messageText;
+    let event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+        });
+    document.body.getElementsByTagName("textarea")[0].dispatchEvent(event);
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
   }
 
@@ -108,7 +116,8 @@ getConfig();
     keyCode: 13,
     which: 13,
     bubbles: true,
-    cancelable: true
+    cancelable: true,
+    isTrusted: true,
   });
 
   chrome.runtime.onMessage.addListener((message) => {
@@ -161,7 +170,7 @@ getConfig();
       filePickerButton.style.alignSelf = "center";
 
       if (buttonContainer.hasChildNodes()) {
-        if (buttonContainer.firstChild.id !== "File-Picker-Button"){
+        if (buttonContainer.firstChild.id !== "File-Picker-Button") {
           buttonContainer.insertBefore(filePickerButton, buttonContainer.firstChild);
         }
       } else {
