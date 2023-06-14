@@ -23,22 +23,23 @@
     config = await response.json();
 
     // Replace the constants with the values from the config file
-    readyDelayTimeout_ms=config.readyDelayTimeout;
-    checkReadyButtonTimeout_ms=config.checkReadyButtonTimeout;
-  console.log(checkReadyButtonTimeout_ms);
-  console.log(readyDelayTimeout_ms);
+    readyDelayTimeout_ms = config.readyDelayTimeout;
+    checkReadyButtonTimeout_ms = config.checkReadyButtonTimeout;
+    console.log(checkReadyButtonTimeout_ms);
+    console.log(readyDelayTimeout_ms);
   }
 
   getConfig();
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, message.maxMessageLength);
+    console.log(subStrings.length);
     for (var i = 0; i < subStrings.length; i++) {
+      console.log(i);
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
       if (cancel) break;
-      await timeout(2000);
-      waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
+      await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
     cancel = false;
   }
@@ -47,24 +48,24 @@
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  function sendChatGPTMessage(messageText) {
-    if (document.getElementsByTagName("textarea")[0] === undefined){ 
+  async function sendChatGPTMessage(messageText) {
+    if (document.getElementsByTagName("textarea")[0] === undefined) {
       console.log("failure");
       return;
     }
     document.body.getElementsByTagName("textarea")[0].value = messageText;
     let event = new Event('input', {
-            bubbles: true,
-            cancelable: true,
-        });
+      bubbles: true,
+      cancelable: true,
+    });
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(event);
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
   }
 
-  function run(message) {
+  async function run(message) {
     if (url.match("https:\/\/chat.openai.com\/\?.*")) {
       sendChatGPTMessage(message.mainPrompt);
-      waitForRegenerateResponseButton(sendMessages, message);
+      await waitForRegenerateResponseButton(sendMessages, message);
     } else {
       console.log("Wrong Url");
     }
@@ -92,99 +93,102 @@
   }
 
 
-  function waitForRegenerateResponseButton(callback, param1) {
-    isReady = false;
+async function waitForRegenerateResponseButton(callback, param1) {
+  let isReady = false;
+  while (!isReady && !cancel) {
     let buttons = document.querySelectorAll('button');
     for (let i = 0; i < buttons.length; i++) {
       if (buttons[i].textContent === "Regenerate response") {
-        isReady=true;
+        isReady = true;
         break;
       }
     }
-    if (cancel) {
-      return;
-    }
-    else if (isReady) {
-      setTimeout(()=>callback(param1),readyDelayTimeout_ms);
+
+    if (isReady) {
+      console.log("before Callback");
+      await timeout(readyDelayTimeout_ms);
+      await callback(param1);
+      console.log("after Callback");
     } else {
-      setTimeout(() => {
-        waitForRegenerateResponseButton(callback, param1);
-      }, checkReadyButtonTimeout_ms);
+      console.log("before resolve");
+      await timeout(checkReadyButtonTimeout_ms);
+      console.log("after resolve");
     }
   }
+}
 
-  // Create a new KeyboardEvent object for the 'keydown' event
-  const enterKeyDownEvent = new KeyboardEvent('keydown', {
-    key: 'Enter',
-    code: 'Enter',
-    keyCode: 13,
-    which: 13,
-    bubbles: true,
-    cancelable: true,
-    isTrusted: true,
-  });
+    // Create a new KeyboardEvent object for the 'keydown' event
+    const enterKeyDownEvent = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      bubbles: true,
+      cancelable: true,
+      isTrusted: true,
+    });
 
-  browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "run") {
-      cancel = false;
-      run(message);
-    } else if (message.command === "file-get") {
-      if (localStorage.getItem("importFile-new") === "true") {
-        const fileContent = localStorage.getItem("importFile");
-        browser.runtime.sendMessage({ command: "file-get", content: fileContent });
-        localStorage.setItem("importFile-new", "false");
-      } else {
-        browser.runtime.sendMessage({ command: "file-get", content: "" });
-      }
-    } else if (message.command === "stop") {
-      cancel = true;
-    } else if (message.command === "file-pick") {
-      const textAreaElement = document.querySelector("textarea");
-      var filePicker = null;
-      filePicker = document.createElement("input");
-      filePicker.style = "display: none;";
-      filePicker.id = "filepicker-input";
-      filePicker.type = "file";
-      filePicker.accept = ".txt";
-      filePicker.onchange = e => {
-        localStorage.setItem("importFile-new", "true");
-        var file = e.target.files[0];
-        var reader = new FileReader();
-        reader.readAsText(file, 'UTF-8');
-        reader.onload = readerEvent => {
-          var content = readerEvent.target.result;
-          localStorage.setItem("importFile", content);
+    browser.runtime.onMessage.addListener((message) => {
+      if (message.command === "run") {
+        cancel = false;
+        run(message);
+      } else if (message.command === "file-get") {
+        if (localStorage.getItem("importFile-new") === "true") {
+          const fileContent = localStorage.getItem("importFile");
+          browser.runtime.sendMessage({ command: "file-get", content: fileContent });
+          localStorage.setItem("importFile-new", "false");
+        } else {
+          browser.runtime.sendMessage({ command: "file-get", content: "" });
+        }
+      } else if (message.command === "stop") {
+        cancel = true;
+      } else if (message.command === "file-pick") {
+        const textAreaElement = document.querySelector("textarea");
+        var filePicker = null;
+        filePicker = document.createElement("input");
+        filePicker.style = "display: none;";
+        filePicker.id = "filepicker-input";
+        filePicker.type = "file";
+        filePicker.accept = ".txt";
+        filePicker.onchange = e => {
+          localStorage.setItem("importFile-new", "true");
+          var file = e.target.files[0];
+          var reader = new FileReader();
+          reader.readAsText(file, 'UTF-8');
+          reader.onload = readerEvent => {
+            var content = readerEvent.target.result;
+            localStorage.setItem("importFile", content);
+          }
+        }
+        document.body.appendChild(filePicker);
+
+        var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
+        var filePickerButton = document.createElement("button");
+        filePickerButton.classList.add(...config.regenerateResponseButtonClassString.split(' '));
+        const imageUrl = browser.runtime.getURL('/icons/Red32.png');
+        filePickerButton.id = "File-Picker-Button";
+        filePickerButton.style.backgroundImage = `url("${imageUrl}")`;
+        filePickerButton.style.backgroundSize = "contain";
+        filePickerButton.style.backgroundRepeat = "no-repeat";
+        filePickerButton.style.backgroundPosition = "center";
+        filePickerButton.style.backgroundColor = "transparent";
+        filePickerButton.style.border = "none";
+        filePickerButton.style.height = "32px";
+        filePickerButton.style.width = "32px";
+        filePickerButton.style.alignSelf = "center";
+
+        if (buttonContainer.hasChildNodes()) {
+          if (buttonContainer.firstChild.id !== "File-Picker-Button") {
+            buttonContainer.insertBefore(filePickerButton, buttonContainer.firstChild);
+          }
+        } else {
+          buttonContainer.appendChild(filePickerButton);
+        }
+
+        filePickerButton.onclick = () => {
+          filePicker.click();
         }
       }
-      document.body.appendChild(filePicker);
+    });
 
-      var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
-      var filePickerButton = document.createElement("button");
-      filePickerButton.classList.add(...config.regenerateResponseButtonClassString.split(' '));
-      const imageUrl = browser.runtime.getURL('/icons/Red32.png');
-      filePickerButton.id = "File-Picker-Button";
-      filePickerButton.style.backgroundImage = `url("${imageUrl}")`;
-      filePickerButton.style.backgroundSize = "contain";
-      filePickerButton.style.backgroundRepeat = "no-repeat";
-      filePickerButton.style.backgroundPosition = "center";
-      filePickerButton.style.backgroundColor = "transparent";
-      filePickerButton.style.border = "none";
-      filePickerButton.style.height = "32px";
-      filePickerButton.style.width = "32px";
-      filePickerButton.style.alignSelf = "center";
-
-      if (buttonContainer.hasChildNodes()) {
-        if (buttonContainer.firstChild.id !== "File-Picker-Button") {
-          buttonContainer.insertBefore(filePickerButton, buttonContainer.firstChild);
-        }
-      } else {
-        buttonContainer.appendChild(filePickerButton);
-      }
-
-      filePickerButton.onclick = () => {
-        filePicker.click();
-      }
-    }
-  });
-
-})();
+  }) ();
