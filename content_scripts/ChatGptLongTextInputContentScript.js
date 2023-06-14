@@ -13,7 +13,8 @@
   let cancel = false;
 
   var config;
-  var timeout_ms;
+  var checkReadyButtonTimeout_ms;
+  var readyDelayTimeout_ms;
 
 
   async function getConfig() {
@@ -22,11 +23,13 @@
     config = await response.json();
 
     // Replace the constants with the values from the config file
-    timeout_ms = config.timeout;
+    readyDelayTimeout_ms=config.readyDelayTimeout;
+    checkReadyButtonTimeout_ms=config.checkReadyButtonTimeout;
+  console.log(checkReadyButtonTimeout_ms);
+  console.log(readyDelayTimeout_ms);
   }
 
   getConfig();
-
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, message.maxMessageLength);
@@ -34,7 +37,7 @@
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
       if (cancel) break;
-      await timeout(timeout_ms);
+      await timeout(2000);
       waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
     }
     cancel = false;
@@ -94,7 +97,7 @@
     let buttons = document.querySelectorAll('button');
     for (let i = 0; i < buttons.length; i++) {
       if (buttons[i].textContent === "Regenerate response") {
-        isReady = true;
+        isReady=true;
         break;
       }
     }
@@ -102,11 +105,11 @@
       return;
     }
     else if (isReady) {
-      callback(param1);
+      setTimeout(()=>callback(param1),readyDelayTimeout_ms);
     } else {
       setTimeout(() => {
         waitForRegenerateResponseButton(callback, param1);
-      }, timeout_ms);
+      }, checkReadyButtonTimeout_ms);
     }
   }
 
