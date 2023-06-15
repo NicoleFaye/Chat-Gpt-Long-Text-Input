@@ -15,6 +15,7 @@
   var config;
   var checkReadyButtonTimeout_ms;
   var readyDelayTimeout_ms;
+  var timeBetweenMessages_ms;
 
 
   async function getConfig() {
@@ -25,21 +26,20 @@
     // Replace the constants with the values from the config file
     readyDelayTimeout_ms = config.readyDelayTimeout;
     checkReadyButtonTimeout_ms = config.checkReadyButtonTimeout;
-    console.log(checkReadyButtonTimeout_ms);
-    console.log(readyDelayTimeout_ms);
+    timeBetweenMessages_ms=config.timeBetweenMessages;
   }
 
   getConfig();
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, message.maxMessageLength);
-    console.log(subStrings.length);
     for (var i = 0; i < subStrings.length; i++) {
       console.log(i);
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
       if (cancel) break;
       await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
+      await timeout(timeBetweenMessages_ms);
     }
     cancel = false;
   }
@@ -64,7 +64,8 @@
 
   async function run(message) {
     if (url.match("https:\/\/chat.openai.com\/\?.*")) {
-      sendChatGPTMessage(message.mainPrompt);
+      await sendChatGPTMessage(message.mainPrompt);
+      await timeout(timeBetweenMessages_ms);
       await waitForRegenerateResponseButton(sendMessages, message);
     } else {
       console.log("Wrong Url");
@@ -105,14 +106,10 @@ async function waitForRegenerateResponseButton(callback, param1) {
     }
 
     if (isReady) {
-      console.log("before Callback");
       await timeout(readyDelayTimeout_ms);
       await callback(param1);
-      console.log("after Callback");
     } else {
-      console.log("before resolve");
       await timeout(checkReadyButtonTimeout_ms);
-      console.log("after resolve");
     }
   }
 }
