@@ -13,19 +13,23 @@
   let cancel = false;
 
   var config;
-  var timeout_ms;
+  var checkReadyButtonTimeout_ms;
+  var readyDelayTimeout_ms;
+  var timeBetweenMessages_ms;
 
 
   async function getConfig(){
   // Load the JSON config file
   const response = await fetch(chrome.runtime.getURL('config.json'));
-  config = await response.json();
-  // Replace the constants with the values from the config file
-  timeout_ms = config.timeout;
-}
+    config = await response.json();
+
+    // Replace the constants with the values from the config file
+    readyDelayTimeout_ms = config.readyDelayTimeout;
+    checkReadyButtonTimeout_ms = config.checkReadyButtonTimeout;
+    timeBetweenMessages_ms=config.timeBetweenMessages;
+  }
 
   getConfig();
-
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, message.maxMessageLength);
@@ -33,8 +37,8 @@
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
       if (cancel) break;
-      await timeout(timeout_ms);
-      waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
+      await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
+      await timeout(timeBetweenMessages_ms);
     }
     cancel = false;
   }
@@ -43,24 +47,25 @@
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  function sendChatGPTMessage(messageText) {
-    if (document.getElementsByTagName("textarea")[0] === undefined){ 
+  async function sendChatGPTMessage(messageText) {
+    if (document.getElementsByTagName("textarea")[0] === undefined) {
       console.log("failure");
       return;
     }
     document.body.getElementsByTagName("textarea")[0].value = messageText;
     let event = new Event('input', {
-            bubbles: true,
-            cancelable: true,
-        });
+      bubbles: true,
+      cancelable: true,
+    });
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(event);
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
   }
 
-  function run(message) {
+  async function run(message) {
     if (url.match("https:\/\/chat.openai.com\/\?.*")) {
-      sendChatGPTMessage(message.mainPrompt);
-      waitForRegenerateResponseButton(sendMessages, message);
+      await sendChatGPTMessage(message.mainPrompt);
+      await timeout(timeBetweenMessages_ms);
+      await waitForRegenerateResponseButton(sendMessages, message);
     } else {
       console.log("Wrong Url");
     }
@@ -88,8 +93,9 @@
   }
 
 
-  function waitForRegenerateResponseButton(callback, param1) {
-    isReady = false;
+async function waitForRegenerateResponseButton(callback, param1) {
+  let isReady = false;
+  while (!isReady && !cancel) {
     let buttons = document.querySelectorAll('button');
     for (let i = 0; i < buttons.length; i++) {
       if (buttons[i].textContent === "Regenerate response") {
@@ -97,28 +103,26 @@
         break;
       }
     }
-    if (cancel) {
-      return;
-    }
-    else if (isReady) {
-      callback(param1);
+
+    if (isReady) {
+      await timeout(readyDelayTimeout_ms);
+      await callback(param1);
     } else {
-      setTimeout(() => {
-        waitForRegenerateResponseButton(callback, param1);
-      }, timeout_ms);
+      await timeout(checkReadyButtonTimeout_ms);
     }
   }
+}
 
-  // Create a new KeyboardEvent object for the 'keydown' event
-  const enterKeyDownEvent = new KeyboardEvent('keydown', {
-    key: 'Enter',
-    code: 'Enter',
-    keyCode: 13,
-    which: 13,
-    bubbles: true,
-    cancelable: true,
-    isTrusted: true,
-  });
+    // Create a new KeyboardEvent object for the 'keydown' event
+    const enterKeyDownEvent = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      bubbles: true,
+      cancelable: true,
+      isTrusted: true,
+    });
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.command === "run") {
@@ -152,8 +156,6 @@
           localStorage.setItem("importFile", content);
         }
       }
-      document.body.appendChild(filePicker);
-
       var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
       var filePickerButton = document.createElement("button");
       filePickerButton.classList.add(...config.regenerateResponseButtonClassString.split(' '));
