@@ -34,7 +34,6 @@
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, message.maxMessageLength);
     for (var i = 0; i < subStrings.length; i++) {
-      console.log(i);
       var element = subStrings[i];
       var stringToSend = message.messagePrepend + "\n\n" + element + "\n\n" + message.messageAppend;
       if (cancel) break;
