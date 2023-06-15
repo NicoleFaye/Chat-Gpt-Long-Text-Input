@@ -170,6 +170,7 @@ async function waitForRegenerateResponseButton(callback, param1) {
       filePickerButton.style.height = "32px";
       filePickerButton.style.width = "32px";
       filePickerButton.style.alignSelf = "center";
+        document.body.appendChild(filePicker);
 
       if (buttonContainer.hasChildNodes()) {
         if (buttonContainer.firstChild.id !== "File-Picker-Button") {
