@@ -1,5 +1,10 @@
 # Chat Gpt Long Text Input
- A Browser plugin for Chat Gpt that automates the entry of a large peice of text a little bit at a time.
+A browser plugin for Chat Gpt that automates the entry of a large piece by splitting the text into multiple messages.
+
+Custom initial message
+Custom prepended message before each section of the of the split up text
+Custom appended message after each section of the split up text
+
 
 |Platform|Current version|
 |------------------|-----|
