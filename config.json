@@ -4,5 +4,7 @@
   "messagePrepend":"Here is the next portion. (Document beings here)",
   "messageAppend":"(Document ends here) Respond to this message with only the word: \"Confirmed.\"",
   "regenerateResponseButtonClassString":"btn relative btn-neutral border-0 md:border",
-  "timeout":500
+  "checkReadyButtonTimeout":500,
+  "readyDelayTimeout":500,
+  "timeBetweenMessages":1000
 }
