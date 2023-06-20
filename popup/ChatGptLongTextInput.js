@@ -210,6 +210,7 @@ function listenForClicks() {
             document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
             document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
             document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+            document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
             document.getElementById("defaultMaxMessageLength").value=defaultValues.maxMessageLength;
             settingsContent.classList.toggle("show");
           }
@@ -239,6 +240,7 @@ window.addEventListener("visibilitychange", (event) => {
     mainPrompt: document.body.getElementsByTagName("input")[0].value,
     messagePrepend: document.body.getElementsByTagName("input")[1].value,
     messageAppend: document.body.getElementsByTagName("input")[2].value,
+    finalPrompt: document.body.getElementsById("finalPrompt").value,
   };
   localStorage.setItem("popupData", JSON.stringify(data));
 });
@@ -253,6 +255,7 @@ if (storedData !== null) {
   document.body.getElementsByTagName("input")[0].value = storedData.mainPrompt;
   document.body.getElementsByTagName("input")[1].value = storedData.messagePrepend;
   document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
+  document.body.getElementsById("finalPrompt").value = storedData.finalPrompt;
 }
 
 
