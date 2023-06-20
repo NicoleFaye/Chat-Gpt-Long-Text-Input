@@ -24,10 +24,12 @@
       <label for="messageAppend">After each addition:</label>
       <input id="messageAppend" type="text"
         value='(Document ends here) Respond to this message with only the word: "Confirmed."' autocomplete="off" />
-      <label for="finalPrompt">Final Message:</label>
-      <input id="finalPrompt" type="text"
-        value='You now have the entire document. Stop answering with only the word confirmed. Reply to this message with "Okay" if you understand.'
-        autocomplete="off" />
+      <div id="FinalPromptDiv">
+        <label for="finalPrompt">Final Message:</label>
+        <input id="finalPrompt" type="text"
+          value='You now have the entire document. Stop answering with only the word confirmed. Reply to this message with "Okay" if you understand.'
+          autocomplete="off" />
+      </div>
       <div class="button-container">
         <label for="textInput">Text to import:</label>
         <button id="file-button">Enable File Picker Button</button>
@@ -52,7 +54,7 @@
       <input id="defaultAppend" type="text" autocomplete="off" />
       <div class="checkbox-container">
         <label for="defaultUseFinalPrompt">Send Final Message:</label>
-        <input type="checkbox" id="defaultUseFinalPrompt" name="defaultUseFinalPrompt"/>
+        <input type="checkbox" id="defaultUseFinalPrompt" name="defaultUseFinalPrompt" />
       </div>
       <label for="defaultFinalPrompt">Final Message:</label>
       <input id="defaultFinalPrompt" type="text" autocomplete="off" />
