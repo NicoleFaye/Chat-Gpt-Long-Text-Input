@@ -17,8 +17,9 @@ async function getConfig() {
     };
   } else {
     // Otherwise, fetch default values from config.json
-    getJsonConfig();
+    await getJsonConfig();
   }
+  updateFinalMessageDisplay();
 }
 
 async function getJsonConfig() {
@@ -50,6 +51,14 @@ const settingsContent = document.getElementById("settings-content");
 const popupContent = document.getElementById("popup-content");
 
 
+
+function updateFinalMessageDisplay(){
+  if(localStorage.getItem('defaultUseFinalPrompt')==='true'){
+    document.getElementById("FinalPromptDiv").style.display='block';
+  }else{
+    document.getElementById("FinalPromptDiv").style.display='none';
+  }
+}
 
 
 function resetInputs() {
@@ -197,7 +206,7 @@ function listenForClicks() {
       defaultValues.messagePrepend = document.getElementById("defaultPrepend").value;
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
       defaultValues.maxMessageLength = document.getElementById("defaultMaxMessageLength").value;
-      defaultValues.useFinalPrompt = document.getElementById("defaultUseFinalPrompt").checked;
+      defaultValues.useFinalPrompt = document.getElementById("defaultUseFinalPrompt").checked.toString();
       defaultValues.finalPrompt = document.getElementById("defaultFinalPrompt").value;
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
@@ -205,6 +214,7 @@ function listenForClicks() {
       localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
       localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
       localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
+      updateFinalMessageDisplay();
     }
     else if (e.target.id === "hard-reset-button") {
       showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
@@ -270,6 +280,8 @@ browser.runtime.onMessage.addListener((message) => {
       document.getElementById("textInput").value = fileContent;
   }
 });
+
+//document.addEventListener("DOMContentLoaded",updateFinalMessageDisplay);
 
 
 function reportError(err) {
