@@ -213,6 +213,8 @@ button[type="reset"] {
 }
 
 .checkbox-container input[type="checkbox"] {
+  width: 115%;
   margin-left: auto;
   flex-shrink: 0;
+  scale: 1.5;
 }
