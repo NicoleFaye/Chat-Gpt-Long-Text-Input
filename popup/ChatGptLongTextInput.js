@@ -3,13 +3,14 @@ var defaultValues = {};
 
 async function getConfig() {
   // Check if default values are already stored in local storage
-  if (localStorage.getItem('defaultMainPrompt') && localStorage.getItem('defaultMessagePrepend') && localStorage.getItem('defaultMessageAppend') && localStorage.getItem("defaultMaxMessageLength") && localStorage.getItem("defaultFinalPrompt") && localStorage.getItem("defaultUseFinalPrompt")) {
+  if (localStorage.getItem('defaultMainPrompt') && localStorage.getItem('defaultMessagePrepend') && localStorage.getItem('defaultMessageAppend') && localStorage.getItem("defaultMaxMessageLength") && localStorage.getItem("defaultFinalPrompt")) {
+  
     defaultValues = {
       textToImport: "",
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
-      textToImportHeight: document.body.getElementById("textInput")[0].getAttribute("height"),
+      textToImportHeight: document.getElementById("textInput").getAttribute("height"),
       maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
       useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
       finalPrompt: localStorage.getItem("defaultFinalPrompt"),
@@ -29,7 +30,7 @@ async function getJsonConfig() {
     mainPrompt: config.mainPrompt,
     messagePrepend: config.messagePrepend,
     messageAppend: config.messageAppend,
-    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+    textToImportHeight: document.getElementById("inputText").getAttribute("height"),
     maxMessageLength: config.maxMessageLength,
     useFinalPrompt: config.useFinalPrompt,
     finalPrompt: config.finalPrompt,
@@ -52,12 +53,12 @@ const popupContent = document.getElementById("popup-content");
 
 
 function resetInputs() {
-  document.body.getElementsById("textInput").value = defaultValues.textToImport;
-  document.body.getElementsById("mainPrompt").value = defaultValues.mainPrompt;
-  document.body.getElementsById("messagePrepend").value = defaultValues.messagePrepend;
-  document.body.getElementsById("messageAppend").value = defaultValues.messageAppend;
-  document.body.getElementsById("finalPrompt").value = defaultValues.finalPrompt;
-  document.body.getElementsById("textArea").setAttribute("height", defaultValues.textToImportHeight)
+  document.getElementById("textInput").value = defaultValues.textToImport;
+  document.getElementById("mainPrompt").value = defaultValues.mainPrompt;
+  document.getElementById("messagePrepend").value = defaultValues.messagePrepend;
+  document.getElementById("messageAppend").value = defaultValues.messageAppend;
+  document.getElementById("finalPrompt").value = defaultValues.finalPrompt;
+  document.getElementById("textArea").setAttribute("height", defaultValues.textToImportHeight)
 }
 
 
@@ -145,13 +146,13 @@ function listenForClicks() {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "run",
         maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
-        textToImport: document.body.getElementsById("textInput").value,
-        mainPrompt: document.body.getElementsById("mainPrompt").value,
-        messagePrepend: document.body.getElementById("messagePrepend").value,
-        messageAppend: document.body.getElementById("messageAppend").value,
+        textToImport: document.getElementById("textInput").value,
+        mainPrompt: document.getElementById("mainPrompt").value,
+        messagePrepend: document.getElementById("messagePrepend").value,
+        messageAppend: document.getElementById("messageAppend").value,
         useFinalPrompt: "false",
         //useFinalPrompt: localStorage.getItem("defaultFinalPrompt"),
-        finalPrompt: document.body.getElementById("finalPrompt").value,
+        finalPrompt: document.getElementById("finalPrompt").value,
       });
     }
 
@@ -236,11 +237,11 @@ function listenForClicks() {
 //listener ensure values stay persistent when the popup closes
 window.addEventListener("visibilitychange", (event) => {
   var data = {
-    textToImport: document.body.getElementsById("textInput").value,
-    mainPrompt: document.body.getElementsById("mainPrompt").value,
-    messagePrepend: document.body.getElementsById("messagePrepend").value,
-    messageAppend: document.body.getElementsById("messageAppend").value,
-    finalPrompt: document.body.getElementsById("finalPrompt").value,
+    textToImport: document.getElementById("textInput").value,
+    mainPrompt: document.getElementById("mainPrompt").value,
+    messagePrepend: document.getElementById("messagePrepend").value,
+    messageAppend: document.getElementById("messageAppend").value,
+    finalPrompt: document.getElementById("finalPrompt").value,
   };
   localStorage.setItem("popupData", JSON.stringify(data));
 });
@@ -251,11 +252,11 @@ window.addEventListener("visibilitychange", (event) => {
  */
 var storedData = JSON.parse(localStorage.getItem("popupData"));
 if (storedData !== null) {
-  document.body.getElementsById("textInput").value = storedData.textToImport;
-  document.body.getElementsById("mainPrompt").value = storedData.mainPrompt;
-  document.body.getElementsById("messagePrepend").value = storedData.messagePrepend;
-  document.body.getElementsById("messageAppend").value = storedData.messageAppend;
-  document.body.getElementsById("finalPrompt").value = storedData.finalPrompt;
+  document.getElementById("textInput").value = storedData.textToImport;
+  document.getElementById("mainPrompt").value = storedData.mainPrompt;
+  document.getElementById("messagePrepend").value = storedData.messagePrepend;
+  document.getElementById("messageAppend").value = storedData.messageAppend;
+  document.getElementById("finalPrompt").value = storedData.finalPrompt;
 }
 
 
