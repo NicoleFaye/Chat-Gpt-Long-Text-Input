@@ -199,3 +199,20 @@ button[type="reset"] {
   font-size: 1.1em;
 }
 
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;  
+}
+
+.checkbox-container label {
+  text-align: left;
+  white-space: nowrap;
+  display: inline;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-left: auto;
+  flex-shrink: 0;
+}
