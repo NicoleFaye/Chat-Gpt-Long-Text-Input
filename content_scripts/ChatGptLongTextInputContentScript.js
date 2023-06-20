@@ -66,6 +66,8 @@
       await sendChatGPTMessage(message.mainPrompt);
       await timeout(timeBetweenMessages_ms);
       await waitForRegenerateResponseButton(sendMessages, message);
+      await timeout(timeBetweenMessages_ms);
+      await sendChatGPTMessage(message.finalPrompt);
     } else {
       console.log("Wrong Url");
     }
