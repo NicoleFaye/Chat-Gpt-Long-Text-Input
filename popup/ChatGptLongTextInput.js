@@ -9,7 +9,7 @@ async function getConfig() {
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
-      textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+      textToImportHeight: document.body.getElementById("textInput")[0].getAttribute("height"),
       maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
       useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
       finalPrompt: localStorage.getItem("defaultFinalPrompt"),
@@ -52,12 +52,12 @@ const popupContent = document.getElementById("popup-content");
 
 
 function resetInputs() {
-  document.body.getElementsByTagName("textarea")[0].value = defaultValues.textToImport;
-  document.body.getElementsByTagName("input")[0].value = defaultValues.mainPrompt;
-  document.body.getElementsByTagName("input")[1].value = defaultValues.messagePrepend;
-  document.body.getElementsByTagName("input")[2].value = defaultValues.messageAppend;
-  document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
+  document.body.getElementsById("textInput").value = defaultValues.textToImport;
+  document.body.getElementsById("mainPrompt").value = defaultValues.mainPrompt;
+  document.body.getElementsById("messagePrepend").value = defaultValues.messagePrepend;
+  document.body.getElementsById("messageAppend").value = defaultValues.messageAppend;
   document.body.getElementsById("finalPrompt").value = defaultValues.finalPrompt;
+  document.body.getElementsById("textArea").setAttribute("height", defaultValues.textToImportHeight)
 }
 
 
@@ -145,10 +145,10 @@ function listenForClicks() {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "run",
         maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
-        textToImport: document.body.getElementsByTagName("textarea")[0].value,
-        mainPrompt: document.body.getElementsByTagName("input")[0].value,
-        messagePrepend: document.body.getElementsByTagName("input")[1].value,
-        messageAppend: document.body.getElementsByTagName("input")[2].value,
+        textToImport: document.body.getElementsById("textInput").value,
+        mainPrompt: document.body.getElementsById("mainPrompt").value,
+        messagePrepend: document.body.getElementById("messagePrepend").value,
+        messageAppend: document.body.getElementById("messageAppend").value,
         useFinalPrompt: "false",
         //useFinalPrompt: localStorage.getItem("defaultFinalPrompt"),
         finalPrompt: document.body.getElementById("finalPrompt").value,
