@@ -236,10 +236,10 @@ function listenForClicks() {
 //listener ensure values stay persistent when the popup closes
 window.addEventListener("visibilitychange", (event) => {
   var data = {
-    textToImport: document.body.getElementsByTagName("textarea")[0].value,
-    mainPrompt: document.body.getElementsByTagName("input")[0].value,
-    messagePrepend: document.body.getElementsByTagName("input")[1].value,
-    messageAppend: document.body.getElementsByTagName("input")[2].value,
+    textToImport: document.body.getElementsById("textInput").value,
+    mainPrompt: document.body.getElementsById("mainPrompt").value,
+    messagePrepend: document.body.getElementsById("messagePrepend").value,
+    messageAppend: document.body.getElementsById("messageAppend").value,
     finalPrompt: document.body.getElementsById("finalPrompt").value,
   };
   localStorage.setItem("popupData", JSON.stringify(data));
@@ -251,10 +251,10 @@ window.addEventListener("visibilitychange", (event) => {
  */
 var storedData = JSON.parse(localStorage.getItem("popupData"));
 if (storedData !== null) {
-  document.body.getElementsByTagName("textarea")[0].value = storedData.textToImport;
-  document.body.getElementsByTagName("input")[0].value = storedData.mainPrompt;
-  document.body.getElementsByTagName("input")[1].value = storedData.messagePrepend;
-  document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
+  document.body.getElementsById("textInput").value = storedData.textToImport;
+  document.body.getElementsById("mainPrompt").value = storedData.mainPrompt;
+  document.body.getElementsById("messagePrepend").value = storedData.messagePrepend;
+  document.body.getElementsById("messageAppend").value = storedData.messageAppend;
   document.body.getElementsById("finalPrompt").value = storedData.finalPrompt;
 }
 
