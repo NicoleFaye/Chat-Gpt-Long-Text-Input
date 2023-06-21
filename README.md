@@ -8,8 +8,8 @@ Custom appended message after each section of the split up text
 
 |Platform|Current version|
 |------------------|-----|
-|[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.4.6 |
-|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.5 |
+|[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.4.7 |
+|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.7 (Pending) |
 
 ### Screencap:
 ![Popup](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/mainPage.png)
