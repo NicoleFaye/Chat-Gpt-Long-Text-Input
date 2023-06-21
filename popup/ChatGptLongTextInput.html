@@ -23,7 +23,13 @@
         autocomplete="off" />
       <label for="messageAppend">After each addition:</label>
       <input id="messageAppend" type="text"
-        value="(Document ends here) Respond to this message with only the word: 'Confirmed.'" autocomplete="off" />
+        value='(Document ends here) Respond to this message with only the word: "Confirmed."' autocomplete="off" />
+      <div id="FinalPromptDiv">
+        <label for="finalPrompt">Final Message:</label>
+        <input id="finalPrompt" type="text"
+          value='You now have the entire document. Stop answering with only the word confirmed. Reply to this message with "Okay" if you understand.'
+          autocomplete="off" />
+      </div>
       <div class="button-container">
         <label for="textInput">Text to import:</label>
         <button id="file-button">Enable File Picker Button</button>
@@ -34,7 +40,7 @@
 
 
 
-    
+
     <div id="settings-content" class="">
       <div class="button-container">
         <p>Default Values</p>
@@ -46,11 +52,17 @@
       <input id="defaultPrepend" type="text" autocomplete="off" />
       <label for="defaultAppend">After each addition:</label>
       <input id="defaultAppend" type="text" autocomplete="off" />
+      <div class="checkbox-container">
+        <label for="defaultUseFinalPrompt">Send Final Message:</label>
+        <input type="checkbox" id="defaultUseFinalPrompt" name="defaultUseFinalPrompt" />
+      </div>
+      <label for="defaultFinalPrompt">Final Message:</label>
+      <input id="defaultFinalPrompt" type="text" autocomplete="off" />
       <label for="defaultMaxMessageLength">Max Characters per Message:</label>
       <input id="defaultMaxMessageLength" type="number" autocomplete="off" />
       <div class="button-container">
-      <button type="save" id="save-button">Save</button>
-      <button type="hard-reset" id="hard-reset-button">Hard Reset</button>
+        <button type="save" id="save-button">Save</button>
+        <button type="hard-reset" id="hard-reset-button">Hard Reset</button>
       </div>
     </div>
     <script src="ChatGptLongTextInput.js"></script>

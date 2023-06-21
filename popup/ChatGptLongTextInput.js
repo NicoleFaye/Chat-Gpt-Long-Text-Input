@@ -3,19 +3,23 @@ var defaultValues = {};
 
 async function getConfig() {
   // Check if default values are already stored in local storage
-  if (localStorage.getItem('defaultMainPrompt') && localStorage.getItem('defaultMessagePrepend') && localStorage.getItem('defaultMessageAppend') && localStorage.getItem("defaultMaxMessageLength")) {
+  if (localStorage.getItem('defaultMainPrompt') && localStorage.getItem('defaultMessagePrepend') && localStorage.getItem('defaultMessageAppend') && localStorage.getItem("defaultMaxMessageLength") && localStorage.getItem("defaultFinalPrompt")) {
+
     defaultValues = {
       textToImport: "",
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
-      textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+      textToImportHeight: document.getElementById("textInput").getAttribute("height"),
       maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+      useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
+      finalPrompt: localStorage.getItem("defaultFinalPrompt"),
     };
   } else {
     // Otherwise, fetch default values from config.json
-    getJsonConfig();
+    await getJsonConfig();
   }
+  updateFinalMessageDisplay();
 }
 
 async function getJsonConfig() {
@@ -27,13 +31,17 @@ async function getJsonConfig() {
     mainPrompt: config.mainPrompt,
     messagePrepend: config.messagePrepend,
     messageAppend: config.messageAppend,
-    textToImportHeight: document.body.getElementsByTagName("textArea")[0].getAttribute("height"),
+    textToImportHeight: document.getElementById("inputText").getAttribute("height"),
     maxMessageLength: config.maxMessageLength,
+    useFinalPrompt: config.useFinalPrompt,
+    finalPrompt: config.finalPrompt,
   };
   localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
   localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
   localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
   localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
+  localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
+  localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
 }
 
 getConfig();
@@ -44,13 +52,22 @@ const popupContent = document.getElementById("popup-content");
 
 
 
+function updateFinalMessageDisplay(){
+  if(localStorage.getItem('defaultUseFinalPrompt')==='true'){
+    document.getElementById("FinalPromptDiv").style.display='block';
+  }else{
+    document.getElementById("FinalPromptDiv").style.display='none';
+  }
+}
+
 
 function resetInputs() {
-  document.body.getElementsByTagName("textarea")[0].value = defaultValues.textToImport;
-  document.body.getElementsByTagName("input")[0].value = defaultValues.mainPrompt;
-  document.body.getElementsByTagName("input")[1].value = defaultValues.messagePrepend;
-  document.body.getElementsByTagName("input")[2].value = defaultValues.messageAppend;
-  document.body.getElementsByTagName("textArea")[0].setAttribute("height", defaultValues.textToImportHeight)
+  document.getElementById("textInput").value = defaultValues.textToImport;
+  document.getElementById("mainPrompt").value = defaultValues.mainPrompt;
+  document.getElementById("messagePrepend").value = defaultValues.messagePrepend;
+  document.getElementById("messageAppend").value = defaultValues.messageAppend;
+  document.getElementById("finalPrompt").value = defaultValues.finalPrompt;
+  document.getElementById("textArea").setAttribute("height", defaultValues.textToImportHeight)
 }
 
 
@@ -138,19 +155,21 @@ function listenForClicks() {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "run",
         maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
-        textToImport: document.body.getElementsByTagName("textarea")[0].value,
-        mainPrompt: document.body.getElementsByTagName("input")[0].value,
-        messagePrepend: document.body.getElementsByTagName("input")[1].value,
-        messageAppend: document.body.getElementsByTagName("input")[2].value,
+        textToImport: document.getElementById("textInput").value,
+        mainPrompt: document.getElementById("mainPrompt").value,
+        messagePrepend: document.getElementById("messagePrepend").value,
+        messageAppend: document.getElementById("messageAppend").value,
+        useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
+        finalPrompt: document.getElementById("finalPrompt").value,
       });
     }
 
 
     function reset(tabs) {
       resetInputs();
-        browser.tabs.sendMessage(tabs[0].id, {
-          command: "stop",
-        }).catch(reportError);
+      browser.tabs.sendMessage(tabs[0].id, {
+        command: "stop",
+      }).catch(reportError);
     }
 
 
@@ -164,20 +183,22 @@ function listenForClicks() {
       document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
       document.getElementById("defaultAppend").value = defaultValues.messageAppend;
       document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
+      document.getElementById("defaultUseFinalPrompt").checked= defaultValues.useFinalPrompt==='true';
+      document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
     }
     else if (e.target.id === "close-button") {
       settingsContent.classList.toggle("show");
     }
     else if (e.target.id === "file-button") {
-        browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
-          browser.tabs.sendMessage(tabs[0].id, {
-            command: "file-pick",
-        }).catch(()=>{
+      browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, {
+          command: "file-pick",
+        }).catch(() => {
           showConfirmationPopupOkay("Try again with ChatGpt open.");
         });
-        }).catch((error) => {
-          reportError(error);
-        });
+      }).catch((error) => {
+        reportError(error);
+      });
     }
     else if (e.target.id === "save-button") {
       settingsContent.classList.toggle("show");
@@ -185,10 +206,15 @@ function listenForClicks() {
       defaultValues.messagePrepend = document.getElementById("defaultPrepend").value;
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
       defaultValues.maxMessageLength = document.getElementById("defaultMaxMessageLength").value;
+      defaultValues.useFinalPrompt = document.getElementById("defaultUseFinalPrompt").checked.toString();
+      defaultValues.finalPrompt = document.getElementById("defaultFinalPrompt").value;
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
       localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
+      localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
+      localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
+      updateFinalMessageDisplay();
     }
     else if (e.target.id === "hard-reset-button") {
       showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
@@ -197,7 +223,9 @@ function listenForClicks() {
             document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
             document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
             document.getElementById("defaultAppend").value = defaultValues.messageAppend;
-            document.getElementById("defaultMaxMessageLength").value=defaultValues.maxMessageLength;
+            document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt==='true';
+            document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
+            document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
             settingsContent.classList.toggle("show");
           }
           );
@@ -222,10 +250,11 @@ function listenForClicks() {
 //listener ensure values stay persistent when the popup closes
 window.addEventListener("visibilitychange", (event) => {
   var data = {
-    textToImport: document.body.getElementsByTagName("textarea")[0].value,
-    mainPrompt: document.body.getElementsByTagName("input")[0].value,
-    messagePrepend: document.body.getElementsByTagName("input")[1].value,
-    messageAppend: document.body.getElementsByTagName("input")[2].value,
+    textToImport: document.getElementById("textInput").value,
+    mainPrompt: document.getElementById("mainPrompt").value,
+    messagePrepend: document.getElementById("messagePrepend").value,
+    messageAppend: document.getElementById("messageAppend").value,
+    finalPrompt: document.getElementById("finalPrompt").value,
   };
   localStorage.setItem("popupData", JSON.stringify(data));
 });
@@ -236,10 +265,11 @@ window.addEventListener("visibilitychange", (event) => {
  */
 var storedData = JSON.parse(localStorage.getItem("popupData"));
 if (storedData !== null) {
-  document.body.getElementsByTagName("textarea")[0].value = storedData.textToImport;
-  document.body.getElementsByTagName("input")[0].value = storedData.mainPrompt;
-  document.body.getElementsByTagName("input")[1].value = storedData.messagePrepend;
-  document.body.getElementsByTagName("input")[2].value = storedData.messageAppend;
+  document.getElementById("textInput").value = storedData.textToImport;
+  document.getElementById("mainPrompt").value = storedData.mainPrompt;
+  document.getElementById("messagePrepend").value = storedData.messagePrepend;
+  document.getElementById("messageAppend").value = storedData.messageAppend;
+  document.getElementById("finalPrompt").value = storedData.finalPrompt;
 }
 
 
@@ -250,6 +280,8 @@ browser.runtime.onMessage.addListener((message) => {
       document.getElementById("textInput").value = fileContent;
   }
 });
+
+//document.addEventListener("DOMContentLoaded",updateFinalMessageDisplay);
 
 
 function reportError(err) {
@@ -263,11 +295,11 @@ function handleBrowserAction() {
   listenForClicks();
 }
 function injectScript(tabs) {
-  try{
-  browser.tabs.executeScript(tabs[0].id, {file: "/content_scripts/ChatGptLongTextInputContentScript.js"});
-  browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
+  try {
+    browser.tabs.executeScript(tabs[0].id, { file: "/content_scripts/ChatGptLongTextInputContentScript.js" });
+    browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
   }
-  catch(error){
+  catch (error) {
     reportError(error);
   }
 }

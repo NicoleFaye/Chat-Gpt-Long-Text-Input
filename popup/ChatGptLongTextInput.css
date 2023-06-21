@@ -84,7 +84,7 @@ input {
 
 textarea {
   font-size: .85em;
-  height: 280px;
+  height: 200px;
 }
 
 input:focus,
@@ -199,3 +199,22 @@ button[type="reset"] {
   font-size: 1.1em;
 }
 
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;  
+}
+
+.checkbox-container label {
+  text-align: left;
+  white-space: nowrap;
+  display: inline;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 115%;
+  margin-left: auto;
+  flex-shrink: 0;
+  scale: 1.5;
+}
