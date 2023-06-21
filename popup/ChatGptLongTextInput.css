@@ -207,7 +207,6 @@ button[type="reset"] {
   align-items: center;
   margin-bottom: 8px;  
 }
-
 .checkbox-container label {
   text-align: left;
   white-space: nowrap;
@@ -219,4 +218,5 @@ button[type="reset"] {
   margin-left: auto;
   flex-shrink: 0;
   scale: 1.5;
+  box-shadow: none;
 }

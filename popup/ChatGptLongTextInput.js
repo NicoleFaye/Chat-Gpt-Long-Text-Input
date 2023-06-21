@@ -10,7 +10,6 @@ async function getConfig() {
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
-      textToImportHeight: document.getElementById("textInput").getAttribute("height"),
       maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
       useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
       finalPrompt: localStorage.getItem("defaultFinalPrompt"),
@@ -32,7 +31,6 @@ async function getJsonConfig() {
     mainPrompt: config.mainPrompt,
     messagePrepend: config.messagePrepend,
     messageAppend: config.messageAppend,
-    textToImportHeight: document.getElementById("inputText").getAttribute("height"),
     maxMessageLength: config.maxMessageLength,
     useFinalPrompt: config.useFinalPrompt,
     finalPrompt: config.finalPrompt,
@@ -68,7 +66,6 @@ function resetInputs() {
   document.getElementById("messagePrepend").value = defaultValues.messagePrepend;
   document.getElementById("messageAppend").value = defaultValues.messageAppend;
   document.getElementById("finalPrompt").value = defaultValues.finalPrompt;
-  document.getElementById("textArea").setAttribute("height", defaultValues.textToImportHeight)
 }
 function reportError(error) {
   //console.error(`Error: ${error}`);
@@ -185,6 +182,7 @@ function listenForClicks() {
       document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
       document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
       document.getElementById("defaultAppend").value = defaultValues.messageAppend;
+      console.log(defaultValues);
       document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
       document.getElementById("defaultUseFinalPrompt").checked= defaultValues.useFinalPrompt==='true';
       document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
