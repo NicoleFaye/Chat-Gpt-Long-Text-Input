@@ -10,7 +10,6 @@ async function getConfig() {
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
-      textToImportHeight: document.getElementById("textInput").getAttribute("height"),
       maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
       useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
       finalPrompt: localStorage.getItem("defaultFinalPrompt"),
@@ -31,7 +30,6 @@ async function getJsonConfig() {
     mainPrompt: config.mainPrompt,
     messagePrepend: config.messagePrepend,
     messageAppend: config.messageAppend,
-    textToImportHeight: document.getElementById("inputText").getAttribute("height"),
     maxMessageLength: config.maxMessageLength,
     useFinalPrompt: config.useFinalPrompt,
     finalPrompt: config.finalPrompt,
@@ -67,7 +65,6 @@ function resetInputs() {
   document.getElementById("messagePrepend").value = defaultValues.messagePrepend;
   document.getElementById("messageAppend").value = defaultValues.messageAppend;
   document.getElementById("finalPrompt").value = defaultValues.finalPrompt;
-  document.getElementById("textArea").setAttribute("height", defaultValues.textToImportHeight)
 }
 
 
