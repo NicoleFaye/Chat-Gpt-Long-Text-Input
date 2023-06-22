@@ -5,7 +5,6 @@
   "messageAppend":"(Document ends here) Respond to this message with only the word: \"Confirmed.\"",
   "useFinalPrompt":"true",
   "finalPrompt":"You now have the entire document. Stop answering with only the word confirmed. Reply to this message with \"Okay\" if you understand.",
-  "regenerateResponseButtonClassString":"btn relative btn-neutral border-0 md:border",
   "checkReadyButtonTimeout":500,
   "readyDelayTimeout":500,
   "timeBetweenMessages":1000
