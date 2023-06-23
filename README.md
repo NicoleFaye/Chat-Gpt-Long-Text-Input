@@ -1,22 +1,23 @@
 # Chat Gpt Long Text Input
- A Browser plugin for Chat Gpt that automates the entry of a large peice of text a little bit at a time.
+A browser plugin for Chat Gpt that automates the entry of a large piece by splitting the text into multiple messages.
+
+- Custom initial message.
+- Custom prepended message before each section of the of the split up text.
+- Custom appended message after each section of the split up text.
+- Optional Custom final message after completing message input.
+- Reset button resets prompts to defaults and cancels any active input.
+- Import text files (.txt, .csv, .xml, etc)
+
+To import text files, click the enable file picker button option above the text to import while in a chatgpt chat window. This will add a button onto the current chat to the left of the regenerate response button if it is visisble. Clicking this will open a file dialog, which will import the file into the plugins input area.
+
+I tried to add the filepicker to the plugin popup but was unable to do so with the lifecycle of the popup when the filepicker popup grabs focus. 
 
 |Platform|Current version|
 |------------------|-----|
-|[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.4.4 |
-|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.4 |
+|[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.4.7 |
+|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.7 |
 
 ### Screencap:
 ![Popup](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/mainPage.png)
 ![Settings](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/settingsPage.png)
 
-# Planned Features:
-- ablility to import file directly
-    - ~~txt~~ (completed)
-    - ~~csv~~ (completed)
-    - pdf 
-    - docx
-- more formatting options in regards to newlines and whitespace
-- Ability to add custom buttons next to the "regenerate response" button 
-
-## Feel free to make suggestions in the issues section
