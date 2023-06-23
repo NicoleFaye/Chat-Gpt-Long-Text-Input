@@ -13,6 +13,7 @@ To import text files, click the enable file picker button option above the text 
 
 I tried to add the filepicker to the plugin popup but was unable to do so with the lifecycle of the popup when the filepicker popup grabs focus. 
 
+# Install
 
 |Platform|Current version|
 |------------------|-----|
@@ -20,7 +21,7 @@ I tried to add the filepicker to the plugin popup but was unable to do so with t
 |[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.7 |
 
 
-### Screencap:
+## Screencaps:
 ![Popup](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/mainPage.png)
 ![Settings](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/settingsPage.png)
 
