@@ -7,5 +7,6 @@
   "finalPrompt":"You now have the entire document. Stop answering with only the word confirmed. Reply to this message with \"Okay\" if you understand.",
   "checkReadyButtonTimeout":500,
   "readyDelayTimeout":500,
-  "timeBetweenMessages":1000
+  "timeBetweenMessages":1000,
+  "regenerateResponseButtonClassString":"btn relative btn-neutral border-0 md:border"
 }

@@ -17,6 +17,8 @@
   var readyDelayTimeout_ms;
   var timeBetweenMessages_ms;
 
+  getConfig();
+
 
   async function getConfig() {
     // Load the JSON config file
@@ -28,8 +30,6 @@
     checkReadyButtonTimeout_ms = config.checkReadyButtonTimeout;
     timeBetweenMessages_ms = config.timeBetweenMessages;
   }
-
-  getConfig();
 
   async function sendMessages(message) {
     subStrings = splitString(message.textToImport, message.maxMessageLength);
@@ -81,12 +81,10 @@
    * 
    * @param {string} str - The string to be split.
    * @param {number} maxLength - The maximum length of each substring.
-   * @param {boolean} preserveNewlines - If true, the function will only split the string at spaces or tabs.
    * @returns {string[]} An array of substrings.
    */
-  function splitString(str, maxLength, preserveNewlines) {
-    // Choose the splitting regex based on the preserveNewlines parameter.
-    let regex = preserveNewlines ? /[ \t]+/ : /\s+/;
+  function splitString(str, maxLength ) {
+    let regex =  /\s+/;
 
     // Split the input string into words by the chosen regex.
     let words = str.split(regex);

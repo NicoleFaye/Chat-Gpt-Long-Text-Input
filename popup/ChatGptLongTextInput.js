@@ -190,7 +190,7 @@ function listenForClicks() {
       browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         browser.tabs.sendMessage(tabs[0].id, {
           command: "file-pick",
-        }).catch(() => {
+        }).catch((error) => {
           showConfirmationPopupOkay("Try again with ChatGpt open.");
         });
       }).catch((error) => {
