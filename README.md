@@ -1,6 +1,7 @@
 # Chat Gpt Long Text Input
 A browser plugin for Chat Gpt that automates the entry of a large piece by splitting the text into multiple messages.
 
+
 - Custom initial message.
 - Custom prepended message before each section of the of the split up text.
 - Custom appended message after each section of the split up text.
@@ -12,10 +13,12 @@ To import text files, click the enable file picker button option above the text 
 
 I tried to add the filepicker to the plugin popup but was unable to do so with the lifecycle of the popup when the filepicker popup grabs focus. 
 
+
 |Platform|Current version|
 |------------------|-----|
 |[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.4.7 |
 |[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.4.7 |
+
 
 ### Screencap:
 ![Popup](https://raw.githubusercontent.com/NicoleFaye/Chat-Gpt-Long-Text-Input/Firefox-Main/screencaps/mainPage.png)
