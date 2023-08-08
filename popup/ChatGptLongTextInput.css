@@ -210,13 +210,13 @@ button[type="reset"] {
 .checkbox-container label {
   text-align: left;
   white-space: nowrap;
-  display: inline;
 }
 
 .checkbox-container input[type="checkbox"] {
-  width: 115%;
+  width: 100%;
   margin-left: auto;
   flex-shrink: 0;
   scale: 1.5;
   box-shadow: none;
+  margin-right:10px;
 }
