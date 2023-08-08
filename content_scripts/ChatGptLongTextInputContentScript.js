@@ -127,7 +127,7 @@
     while (!isReady && !cancel) {
       let buttons = document.querySelectorAll('button');
       for (let i = 0; i < buttons.length; i++) {
-        if (buttons[i].textContent === "Regenerate response") {
+        if (buttons[i].textContent === "Regenerate") {
           isReady = true;
           break;
         }
