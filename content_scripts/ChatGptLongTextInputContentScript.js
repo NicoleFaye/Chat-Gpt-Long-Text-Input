@@ -75,6 +75,22 @@
     }
   }
 
+  function determineNumberOfMessages(message) {
+    let subStrings = splitString(message.textToImport, message.maxMessageLength);
+    let numberOfMessages = subStrings.length;
+
+    // Add one for the mainPrompt message
+    numberOfMessages++;
+
+    // Add one more if useFinalPrompt is set to true
+    if (message.useFinalPrompt.toLowerCase() === "true") {
+      numberOfMessages++;
+    }
+
+    return numberOfMessages;
+  }
+
+
   /**
    * Function to split a given string into substrings of a specified maximum length.
    * This function will not split words, it will keep words intact while splitting.
@@ -83,8 +99,8 @@
    * @param {number} maxLength - The maximum length of each substring.
    * @returns {string[]} An array of substrings.
    */
-  function splitString(str, maxLength ) {
-    let regex =  /\s+/;
+  function splitString(str, maxLength) {
+    let regex = /\s+/;
 
     // Split the input string into words by the chosen regex.
     let words = str.split(regex);
@@ -159,9 +175,11 @@
     // If the command is 'run', it resets a cancellation flag and runs a certain function
     if (message.command === "run") {
       cancel = false;
+      let numberOfMessages = determineNumberOfMessages(message);
+      console.log(numberOfMessages);
       run(message);
 
-    // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
+      // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
     } else if (message.command === "file-get") {
 
       // Fetch and send file content if new, or send back empty content
@@ -173,12 +191,12 @@
         browser.runtime.sendMessage({ command: "file-get", content: "" });
       }
 
-    // If the command is 'stop', it sets a cancellation flag
+      // If the command is 'stop', it sets a cancellation flag
     } else if (message.command === "stop") {
       cancel = true;
 
-    // If the command is 'file-pick', it adds a file picker button to the webpage, which, when clicked, will open a file dialog.
-    // The selected file's content is read and stored for future use 
+      // If the command is 'file-pick', it adds a file picker button to the webpage, which, when clicked, will open a file dialog.
+      // The selected file's content is read and stored for future use 
     } else if (message.command === "file-pick") {
 
       // Select the textarea element from the document
@@ -206,7 +224,7 @@
       }
       // Append the file input element to the document body
       document.body.appendChild(filePicker);
-      
+
       // The button is added to the button container element in the webpage
       var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
 
