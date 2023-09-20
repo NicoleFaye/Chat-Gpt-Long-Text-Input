@@ -191,7 +191,7 @@ function listenForClicks() {
         browser.tabs.sendMessage(tabs[0].id, {
           command: "file-pick",
         }).catch((error) => {
-          showConfirmationPopupOkay("Try again with ChatGpt open.");
+          showConfirmationPopupOkay("Error. Make sure you are on the right web page.");
         });
       }).catch((error) => {
         reportError(error);
@@ -293,8 +293,12 @@ function handleBrowserAction() {
 }
 function injectScript(tabs) {
   try {
-    browser.tabs.executeScript(tabs[0].id, { file: "/content_scripts/ChatGptLongTextInputContentScript.js" });
-    browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
+    // First inject the shared methods 
+    browser.tabs.executeScript(tabs[0].id, { file: "/content_scripts/ChatGptLongTextInputSharedMethods.js" }).then(() => {
+      // Then inject the content_script.js
+      browser.tabs.executeScript(tabs[0].id, { file: "/content_scripts/ChatGptLongTextInputContentScript.js" });
+      browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
+    });
   }
   catch (error) {
     reportError(error);
