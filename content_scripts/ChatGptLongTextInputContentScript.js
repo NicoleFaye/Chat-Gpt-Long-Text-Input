@@ -226,7 +226,7 @@
       document.body.appendChild(filePicker);
 
       // The button is added to the button container element in the webpage
-      var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
+      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
 
       // Create and style a button that will trigger the hidden file input when clicked
       var filePickerButton = document.createElement("button");
