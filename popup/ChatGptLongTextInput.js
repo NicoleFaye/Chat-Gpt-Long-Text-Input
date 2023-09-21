@@ -222,8 +222,9 @@ function listenForClicks() {
       chrome.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, {
           command: "file-pick",
-        }).catch(() => {
+        }).catch((error) => {
           showConfirmationPopupOkay("Try again with ChatGpt open.");
+          console.log(error);
         });
       }).catch((error) => {
         reportError(error);
@@ -329,7 +330,7 @@ function handleBrowserAction() {
 }
 function injectScript(tabs) {
   try {
-    chrome.tabs.scripting.executeScript({ target: { tabId: tabs[0].id }, files: ["/content_scripts/ChatGptLongTextInputSharedMethods.js"] });
+    chrome.scripting.executeScript({ target: { tabId: tabs[0].id }, files: ["/content_scripts/ChatGptLongTextInputSharedMethods.js"] });
     chrome.scripting.executeScript({ target: { tabId: tabs[0].id }, files: ["/content_scripts/ChatGptLongTextInputContentScript.js"] });
     chrome.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
   }

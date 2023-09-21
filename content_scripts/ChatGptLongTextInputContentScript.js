@@ -204,7 +204,7 @@
       // Create and style a button that will trigger the hidden file input when clicked
       var filePickerButton = document.createElement("button");
       filePickerButton.classList.add(...config.regenerateResponseButtonClassString.split(' '));
-      const imageUrl = browser.runtime.getURL('/icons/Red32.png');
+      const imageUrl = chrome.runtime.getURL('/icons/Red32.png');
       filePickerButton.id = "File-Picker-Button";
       filePickerButton.style.backgroundImage = `url("${imageUrl}")`;
       filePickerButton.style.backgroundSize = "contain";
