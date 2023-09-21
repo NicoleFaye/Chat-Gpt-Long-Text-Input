@@ -7,6 +7,27 @@ body {
   color: #fff;
 }
 
+.textInput-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.textInput-container label{
+  margin: 0px 0;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  display: inline;
+}
+.textInput-container p {
+  margin: 0px 0;
+  font-size: .9em;
+  font-family: 'Open Sans', sans-serif;
+  display: inline;
+}
+
+.textInput-container p {
+  margin-left: 5%;
+}
 
 .hidden {
   display: none;
@@ -45,7 +66,8 @@ button {
   transition: all 0.2s ease-in-out;
 }
 
-.button-container button:last-child {
+.button-container button:last-child,
+.textInput-container button:last-child {
   margin-left: auto;
 }
 
@@ -67,11 +89,6 @@ textarea {
   background-color: #333;
   color: #fff;
   font-family: 'Open Sans', sans-serif;
-}
-
-p {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 1.3em;
 }
 
 label {
@@ -112,11 +129,11 @@ button:hover {
   transition: all 0.2s ease-in-out;
 }
 
-#file-button{
-  padding:3px;
-  margin-top:0px;
+#file-button {
+  padding: 3px;
+  margin-top: 0px;
   margin-bottom: 0px;
-  font-size:.75em;
+  font-size: .75em;
 }
 
 #settings-button {
@@ -152,13 +169,14 @@ button[type="reset"] {
   width: 25%;
 }
 
-#hard-reset-button{
+#hard-reset-button {
   background-color: #9a0707e7;
   width: 35%;
 
 }
 
-#hard-reset-button:hover,button[type="reset"]:hover {
+#hard-reset-button:hover,
+button[type="reset"]:hover {
   background-color: #660000;
 }
 
@@ -194,7 +212,7 @@ button[type="reset"] {
   /* Add other styles for the popup here */
 }
 
-.confirmation-text{
+.confirmation-text {
   margin: 8px;
   font-size: 1.1em;
 }
@@ -203,7 +221,7 @@ button[type="reset"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;  
+  margin-bottom: 8px;
 }
 
 .checkbox-container label {
@@ -216,5 +234,5 @@ button[type="reset"] {
   margin-left: auto;
   flex-shrink: 0;
   scale: 1.5;
-  margin-right:10px;
+  margin-right: 10px;
 }

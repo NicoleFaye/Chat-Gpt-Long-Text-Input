@@ -14,24 +14,25 @@
         <button type="reset" id="reset-button">Reset</button>
         <button type="settings" id="settings-button"></button>
       </div>
-      <label for="mainPrompt">First Message:</label>
+      <label for="mainPrompt">First Message</label>
       <input id="mainPrompt" type="text"
         value="I am going to provide you a large document broken up into smaller pieces, sent to you one message at a time. Each line will be prepended with a message letting you know when the document begins and appended with a message letting you know when the document ends. Please only repond with the word: 'Confirmed' "
         autocomplete="off" />
-      <label for="messagePrepend">Before each addition:</label>
+      <label for="messagePrepend">Before each addition</label>
       <input id="messagePrepend" type="text" value="Here is the next portion. (Document beings here)"
         autocomplete="off" />
-      <label for="messageAppend">After each addition:</label>
+      <label for="messageAppend">After each addition</label>
       <input id="messageAppend" type="text"
         value='(Document ends here) Respond to this message with only the word: "Confirmed."' autocomplete="off" />
       <div id="FinalPromptDiv">
-        <label for="finalPrompt">Final Message:</label>
+        <label for="finalPrompt">Final Message</label>
         <input id="finalPrompt" type="text"
           value='You now have the entire document. Stop answering with only the word confirmed. Reply to this message with "Okay" if you understand.'
           autocomplete="off" />
       </div>
-      <div class="button-container">
-        <label for="textInput">Text to import:</label>
+      <div class="textInput-container">
+        <label for="textInput">Text to import</label>
+        <p id="messageCount"></p>
         <button id="file-button">Enable File Picker Button</button>
       </div>
       <textarea id="textInput"></textarea>
@@ -43,32 +44,33 @@
 
     <div id="settings-content" class="">
       <div class="button-container">
-        <p>Default Values</p>
+        <head>Default Values</head>
         <button type="close" id="close-button"></button>
       </div>
-      <label for="defaultMainPrompt">First Message:</label>
+      <label for="defaultMainPrompt">First Message</label>
       <input id="defaultMainPrompt" type="text" autocomplete="off" />
-      <label for="defaultPrepend">Before each addition:</label>
+      <label for="defaultPrepend">Before each addition</label>
       <input id="defaultPrepend" type="text" autocomplete="off" />
-      <label for="defaultAppend">After each addition:</label>
+      <label for="defaultAppend">After each addition</label>
       <input id="defaultAppend" type="text" autocomplete="off" />
       <div class="checkbox-container row">
         <div class="col-6 text-left">
-          <label for="defaultUseFinalPrompt">Send Final Message:</label>
+          <label for="defaultUseFinalPrompt">Send Final Message</label>
         </div>
         <div class="col-6 text-right">
           <input type="checkbox" id="defaultUseFinalPrompt" name="defaultUseFinalPrompt" />
         </div>
       </div>
-      <label for="defaultFinalPrompt">Final Message:</label>
+      <label for="defaultFinalPrompt">Final Message</label>
       <input id="defaultFinalPrompt" type="text" autocomplete="off" />
-      <label for="defaultMaxMessageLength">Max Characters per Message:</label>
+      <label for="defaultMaxMessageLength">Max Characters per Message</label>
       <input id="defaultMaxMessageLength" type="number" autocomplete="off" />
       <div class="button-container">
         <button type="save" id="save-button">Save</button>
         <button type="hard-reset" id="hard-reset-button">Hard Reset</button>
       </div>
     </div>
+    <script src="../content_scripts/ChatGptLongTextInputSharedMethods.js"></script>
     <script src="ChatGptLongTextInput.js"></script>
   </body>
 
