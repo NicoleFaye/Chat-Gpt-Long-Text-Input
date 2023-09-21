@@ -16,6 +16,8 @@
   var checkReadyButtonTimeout_ms;
   var readyDelayTimeout_ms;
   var timeBetweenMessages_ms;
+  var totalMessages = 0;
+  var messagesSent = 0;
 
   getConfig();
 
@@ -59,10 +61,15 @@
     });
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(event);
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
+    messagesSent++;
+    document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages}`;
   }
 
   async function run(message) {
     if (url.match("https:\/\/chat.openai.com\/\?.*")) {
+      numberOfMessages = determineNumberOfMessages(message);
+      totalMessages = numberOfMessages;
+      messagesSent = 0;
       await sendChatGPTMessage(message.mainPrompt);
       await timeout(timeBetweenMessages_ms);
       await waitForRegenerateResponseButton(sendMessages, message);
@@ -75,51 +82,20 @@
     }
   }
 
-  /**
-   * Function to split a given string into substrings of a specified maximum length.
-   * This function will not split words, it will keep words intact while splitting.
-   * 
-   * @param {string} str - The string to be split.
-   * @param {number} maxLength - The maximum length of each substring.
-   * @returns {string[]} An array of substrings.
-   */
-  function splitString(str, maxLength ) {
-    let regex =  /\s+/;
+  function determineNumberOfMessages(message) {
+    let subStrings = splitString(message.textToImport, message.maxMessageLength);
+    let numberOfMessages = subStrings.length;
 
-    // Split the input string into words by the chosen regex.
-    let words = str.split(regex);
+    // Add one for the mainPrompt message
+    numberOfMessages++;
 
-    // Initialize an array to hold the substrings that we will return.
-    let substrings = [];
-
-    // Initialize a string to accumulate words until we reach the maxLength.
-    let currentString = "";
-
-    // Loop over each word in the words array.
-    for (let word of words) {
-      // Check if the current word can fit into the currentString without exceeding the maxLength.
-      if (currentString.length + word.length <= maxLength) {
-        // If it fits, add the word to the currentString with a trailing space.
-        currentString += `${word} `;
-      } else {
-        // If it doesn't fit, push the currentString into the substrings array after trimming any trailing spaces.
-        substrings.push(currentString.trim());
-
-        // Start a new currentString with the current word.
-        currentString = `${word} `;
-      }
+    // Add one more if useFinalPrompt is set to true
+    if (message.useFinalPrompt.toLowerCase() === "true") {
+      numberOfMessages++;
     }
 
-    // After the loop, there may be a leftover currentString that hasn't been added to the substrings array.
-    // If this string is not empty (after trimming), add it to the substrings array.
-    if (currentString.trim().length) {
-      substrings.push(currentString.trim());
-    }
-
-    // Return the array of substrings.
-    return substrings;
+    return numberOfMessages;
   }
-
 
 
   async function waitForRegenerateResponseButton(callback, param1) {
@@ -155,8 +131,34 @@
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.command === "run") {
+      // Select the textarea element from the document
+      const textAreaElement = document.getElementById("prompt-textarea");
+      // The button is added to the button container element in the webpage
+      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
+
+      // Create a span element to display the number of messages remaining
+      var messagesRemainingDisplay = document.createElement("span");
+      messagesRemainingDisplay.id = "messages-remaining-display";
+      messagesRemainingDisplay.textContent = "";  // Initially empty
+      messagesRemainingDisplay.style.display = "flex";
+      messagesRemainingDisplay.style.alignItems = "center";
+      messagesRemainingDisplay.style.marginLeft = "10px";  // Add some space between the button and the text
+
+
+      if (buttonContainer.hasChildNodes()) {
+        if (buttonContainer.firstChild.id !== "File-Picker-Button" && buttonContainer.firstChild.id !== "messages-remaining-display") {
+          buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild);
+        }else if(buttonContainer.firstChild.id === "File-Picker-Button"){
+          buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild.nextSibling);
+        }
+      } else {
+        buttonContainer.appendChild(messagesRemainingDisplay);
+      }
+
       cancel = false;
       run(message);
+
+      // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
     } else if (message.command === "file-get") {
       if (localStorage.getItem("importFile-new") === "true") {
         const fileContent = localStorage.getItem("importFile");
@@ -165,8 +167,13 @@
       } else{
         chrome.runtime.sendMessage({ command: "file-get", content: ""});
       }
+
+      // If the command is 'stop', it sets a cancellation flag
     } else if (message.command === "stop") {
       cancel = true;
+
+      // If the command is 'file-pick', it adds a file picker button to the webpage, which, when clicked, will open a file dialog.
+      // The selected file's content is read and stored for future use 
     } else if (message.command === "file-pick") {
       const textAreaElement = document.querySelector("textarea");
       var filePicker = null;
@@ -190,9 +197,9 @@
       }
       // Append the file input element to the document body
       document.body.appendChild(filePicker);
-      
+
       // The button is added to the button container element in the webpage
-      var buttonContainer = textAreaElement.parentNode.previousSibling.firstChild;
+      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
 
       // Create and style a button that will trigger the hidden file input when clicked
       var filePickerButton = document.createElement("button");
