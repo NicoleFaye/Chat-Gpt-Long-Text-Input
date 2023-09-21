@@ -1,5 +1,30 @@
 var config = {};
 var defaultValues = {};
+var totalMessages = 0;
+
+function determineNumberOfMessages(textToImport, maxMessageLength, useFinalPrompt) {
+  let subStrings = splitString(textToImport, maxMessageLength);
+  let numberOfMessages = subStrings.length;
+
+  // Add one for the mainPrompt message
+  numberOfMessages++;
+
+  // Add one more if useFinalPrompt is set to true
+  if (useFinalPrompt.toLowerCase() === "true") {
+    numberOfMessages++;
+  }
+
+  return numberOfMessages;
+}
+
+
+function updateTotalMessagesElement() {
+  document.getElementById("messageCount").textContent = totalMessages.toString() + " Total messages";
+}
+function updateTotalMessages(){
+  totalMessages = determineNumberOfMessages(document.getElementById("textInput").value, localStorage.getItem("defaultMaxMessageLength"), localStorage.getItem("defaultUseFinalPrompt"));
+  updateTotalMessagesElement();
+}
 
 async function getConfig() {
   // Check if default values are already stored in local storage
@@ -50,11 +75,13 @@ const popupContent = document.getElementById("popup-content");
 
 
 
-function updateFinalMessageDisplay(){
-  if(localStorage.getItem('defaultUseFinalPrompt')==='true'){
-    document.getElementById("FinalPromptDiv").style.display='block';
-  }else{
-    document.getElementById("FinalPromptDiv").style.display='none';
+
+
+function updateFinalMessageDisplay() {
+  if (localStorage.getItem('defaultUseFinalPrompt') === 'true') {
+    document.getElementById("FinalPromptDiv").style.display = 'block';
+  } else {
+    document.getElementById("FinalPromptDiv").style.display = 'none';
   }
 }
 
@@ -65,6 +92,7 @@ function resetInputs() {
   document.getElementById("messagePrepend").value = defaultValues.messagePrepend;
   document.getElementById("messageAppend").value = defaultValues.messageAppend;
   document.getElementById("finalPrompt").value = defaultValues.finalPrompt;
+  updateTotalMessages();
 }
 
 
@@ -180,7 +208,7 @@ function listenForClicks() {
       document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
       document.getElementById("defaultAppend").value = defaultValues.messageAppend;
       document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
-      document.getElementById("defaultUseFinalPrompt").checked= defaultValues.useFinalPrompt==='true';
+      document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt === 'true';
       document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
     }
     else if (e.target.id === "close-button") {
@@ -212,6 +240,7 @@ function listenForClicks() {
       localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
       localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
       updateFinalMessageDisplay();
+      updateTotalMessages();
     }
     else if (e.target.id === "hard-reset-button") {
       showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
@@ -220,7 +249,7 @@ function listenForClicks() {
             document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
             document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
             document.getElementById("defaultAppend").value = defaultValues.messageAppend;
-            document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt==='true';
+            document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt === 'true';
             document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
             document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
             settingsContent.classList.toggle("show");
@@ -256,6 +285,9 @@ window.addEventListener("visibilitychange", (event) => {
   localStorage.setItem("popupData", JSON.stringify(data));
 });
 
+//listener for when the textInput value changes
+document.getElementById("textInput").addEventListener("input", updateTotalMessages);
+
 
 /**
  * Ensures that when you open the popup after it closes, it is still the same
@@ -290,6 +322,7 @@ function handleBrowserAction() {
   browser.tabs.query({ active: true, currentWindow: true })
     .then(injectScript);
   listenForClicks();
+  updateTotalMessages();
 }
 function injectScript(tabs) {
   try {
