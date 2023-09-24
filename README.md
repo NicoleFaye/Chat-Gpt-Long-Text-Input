@@ -17,8 +17,8 @@ I tried to add the filepicker to the plugin popup but was unable to do so with t
 
 |Platform|Current version|
 |------------------|-----|
-|[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.5.0 |
-|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.5.0 |A
+|[Official Firefox Plugin](https://addons.mozilla.org/en-US/firefox/addon/chat-gpt-long-text-input/)| 1.5.1 |
+|[Official Chrome Plugin](https://chrome.google.com/webstore/detail/chat-gpt-long-text-input/hbomibpicdjokaedngbojejahflkippj)|1.5.1 |A
 
 
 ## Screencaps:

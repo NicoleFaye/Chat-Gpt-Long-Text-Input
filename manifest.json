@@ -2,7 +2,7 @@
   "description": "A Chrome Browser plugin for Chat Gpt that automates the entry of a large piece of text a little bit at a time.",
   "manifest_version": 3,
   "name": "Chat Gpt Long Text Input",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "homepage_url": "https://github.com/NicoleFaye/Chat-Gpt-Long-Text-Input",
   "icons": {
     "48": "icons/Red48.png",
