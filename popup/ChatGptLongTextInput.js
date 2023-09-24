@@ -340,4 +340,3 @@ function injectScript(tabs) {
 
 
 handleBrowserAction();
-updateTotalMessages();
