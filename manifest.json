@@ -1,5 +1,5 @@
 {
-  "description": "A Chrome Browser plugin for Chat Gpt that automates the entry of a large piece of text a little bit at a time.",
+  "description": "A browser plugin for ChatGPT that simplifies sending large texts by breaking them into multiple messages. Features include custom message options, text file importing, and real-time progress estimates.",
   "manifest_version": 3,
   "name": "Chat Gpt Long Text Input",
   "version": "1.5.2",
