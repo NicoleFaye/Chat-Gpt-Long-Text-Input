@@ -1,6 +1,6 @@
 {
 
-  "description": "A Firefox Browser plugin for Chat Gpt that automates the entry of a large peice of text a little bit at a time.",
+  "description": "A browser plugin for ChatGPT that simplifies sending large texts by breaking them into multiple messages. Features include custom message options, text file importing, and real-time progress estimates.",
   "manifest_version": 2,
   "name": "Chat Gpt Long Text Input",
   "version": "1.5.2",
