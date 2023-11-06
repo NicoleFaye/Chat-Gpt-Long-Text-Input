@@ -9,7 +9,9 @@
   <body>
     <div id="popup-content">
       <div class="button-container">
-        <button type="start">Start</button>
+        <button type="start" id="start-button">Start</button>
+        <button type="resume" id="resume-button">Resume</button>
+        <button type="stop" id="stop-button">Stop</button>
         <button type="reset" id="reset-button">Reset</button>
         <button type="settings" id="settings-button"></button>
       </div>
@@ -43,7 +45,7 @@
 
     <div id="settings-content" class="">
       <div class="button-container">
-        <head>Default Values</head>
+        <h1>Default Values</h1>
         <button type="close" id="close-button"></button>
       </div>
       <label for="defaultMainPrompt">First Message</label>

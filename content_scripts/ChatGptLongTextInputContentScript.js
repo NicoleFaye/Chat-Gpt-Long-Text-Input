@@ -49,9 +49,8 @@
       if (cancel) break;
       await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
       await timeout(timeBetweenMessages_ms);
-            
+
     }
-    cancel = false;
   }
 
   function timeout(ms) {
@@ -72,36 +71,53 @@
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
     messagesSent++;
     // Current time in milliseconds
-      let currentTime = new Date().getTime();
+    let currentTime = new Date().getTime();
 
-      // Calculate and store time between this and previous message
-      if (previousTime !== 0) {
-        timesBetweenMessages.push(currentTime - previousTime);
+    // Calculate and store time between this and previous message
+    if (previousTime !== 0) {
+      timesBetweenMessages.push(currentTime - previousTime);
 
-        // Calculate the Average Time Between Messages
-        let averageTimeBetween = timesBetweenMessages.reduce((a, b) => a + b) / timesBetweenMessages.length;
+      // Calculate the Average Time Between Messages
+      let averageTimeBetween = timesBetweenMessages.reduce((a, b) => a + b) / timesBetweenMessages.length;
 
-        // Predict ETA
-        let remainingMessages = totalMessages - messagesSent;
-        let etaSeconds = (averageTimeBetween * remainingMessages) / 1000;
-        let etaMinutes = Math.floor(etaSeconds / 60);
-        etaSeconds = etaSeconds % 60;
+      // Predict ETA
+      let remainingMessages = totalMessages - messagesSent;
+      let etaSeconds = (averageTimeBetween * remainingMessages) / 1000;
+      let etaMinutes = Math.floor(etaSeconds / 60);
+      etaSeconds = etaSeconds % 60;
 
-        // Update the Display only if there are messages remaining
-        if (totalMessages !== messagesSent) {
-          document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: ${etaMinutes}m ${Math.round(etaSeconds)}s`;
-        } else {
-          document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages}`;
-        }
+      // Update the Display only if there are messages remaining
+      if (totalMessages !== messagesSent) {
+        document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: ${etaMinutes}m ${Math.round(etaSeconds)}s`;
       } else {
-        document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: Calculating...`;
+        document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages}`;
       }
+    } else {
+      document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: Calculating...`;
+    }
 
-      // Update previousTime
-      previousTime = currentTime;
+    // Update previousTime
+    previousTime = currentTime;
 
   }
 
+  async function resume(message) {
+    if (url.match("https:\/\/chat.openai.com\/\?.*")) {
+      numberOfMessages = determineNumberOfMessages(message, true);
+      totalMessages = numberOfMessages;
+      messagesSent = 0;
+      timesBetweenMessages = [];
+      previousTime = 0;
+      await waitForRegenerateResponseButton(sendMessages, message);
+      if (message.useFinalPrompt.toLowerCase() === "true" ) {
+        await timeout(timeBetweenMessages_ms);
+        await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
+      }
+    } else {
+      console.log("Wrong Url");
+    }
+
+  }
   async function run(message) {
     if (url.match("https:\/\/chat.openai.com\/\?.*")) {
       numberOfMessages = determineNumberOfMessages(message);
@@ -112,21 +128,26 @@
       await sendChatGPTMessage(message.mainPrompt);
       await timeout(timeBetweenMessages_ms);
       await waitForRegenerateResponseButton(sendMessages, message);
-      if (message.useFinalPrompt.toLowerCase() === "true") {
+      if (message.useFinalPrompt.toLowerCase() === "true" ) {
         await timeout(timeBetweenMessages_ms);
-        await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
+        console.log("Here",cancel);
+        if(!cancel){
+          await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
+        }
       }
     } else {
       console.log("Wrong Url");
     }
   }
 
-  function determineNumberOfMessages(message) {
+  function determineNumberOfMessages(message, resume = false) {
     let subStrings = splitString(message.textToImport, message.maxMessageLength);
     let numberOfMessages = subStrings.length;
 
     // Add one for the mainPrompt message
-    numberOfMessages++;
+    if (!resume) {
+      numberOfMessages++;
+    }
 
     // Add one more if useFinalPrompt is set to true
     if (message.useFinalPrompt.toLowerCase() === "true") {
@@ -197,8 +218,37 @@
       cancel = false;
       run(message);
 
-      // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
+    } else if (message.command === "resume") {
+      // Select the textarea element from the document
+      const textAreaElement = document.getElementById("prompt-textarea");
+      // The button is added to the button container element in the webpage
+      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
+
+      // Create a span element to display the number of messages remaining
+      var messagesRemainingDisplay = document.createElement("span");
+      messagesRemainingDisplay.id = "messages-remaining-display";
+      messagesRemainingDisplay.textContent = "";  // Initially empty
+      messagesRemainingDisplay.style.display = "flex";
+      messagesRemainingDisplay.style.alignItems = "center";
+      messagesRemainingDisplay.style.marginLeft = "10px";  // Add some space between the button and the text
+
+
+      if (buttonContainer.hasChildNodes()) {
+        if (buttonContainer.firstChild.id !== "File-Picker-Button" && buttonContainer.firstChild.id !== "messages-remaining-display") {
+          buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild);
+        } else if (buttonContainer.firstChild.id === "File-Picker-Button") {
+          buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild.nextSibling);
+        }
+      } else {
+        buttonContainer.appendChild(messagesRemainingDisplay);
+      }
+
+      cancel = false;
+      resume(message);
     } else if (message.command === "file-get") {
+      // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
+
+      // Fetch and send file content if new, or send back empty content
       if (localStorage.getItem("importFile-new") === "true") {
         const fileContent = localStorage.getItem("importFile");
         chrome.runtime.sendMessage({ command: "file-get", content: fileContent });
