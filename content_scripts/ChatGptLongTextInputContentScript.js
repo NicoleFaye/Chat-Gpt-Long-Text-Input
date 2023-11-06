@@ -49,7 +49,7 @@
       if (cancel) break;
       await waitForRegenerateResponseButton(sendChatGPTMessage, stringToSend);
       await timeout(timeBetweenMessages_ms);
-            
+
     }
     cancel = false;
   }
@@ -72,33 +72,33 @@
     document.body.getElementsByTagName("textarea")[0].dispatchEvent(enterKeyDownEvent);
     messagesSent++;
     // Current time in milliseconds
-      let currentTime = new Date().getTime();
+    let currentTime = new Date().getTime();
 
-      // Calculate and store time between this and previous message
-      if (previousTime !== 0) {
-        timesBetweenMessages.push(currentTime - previousTime);
+    // Calculate and store time between this and previous message
+    if (previousTime !== 0) {
+      timesBetweenMessages.push(currentTime - previousTime);
 
-        // Calculate the Average Time Between Messages
-        let averageTimeBetween = timesBetweenMessages.reduce((a, b) => a + b) / timesBetweenMessages.length;
+      // Calculate the Average Time Between Messages
+      let averageTimeBetween = timesBetweenMessages.reduce((a, b) => a + b) / timesBetweenMessages.length;
 
-        // Predict ETA
-        let remainingMessages = totalMessages - messagesSent;
-        let etaSeconds = (averageTimeBetween * remainingMessages) / 1000;
-        let etaMinutes = Math.floor(etaSeconds / 60);
-        etaSeconds = etaSeconds % 60;
+      // Predict ETA
+      let remainingMessages = totalMessages - messagesSent;
+      let etaSeconds = (averageTimeBetween * remainingMessages) / 1000;
+      let etaMinutes = Math.floor(etaSeconds / 60);
+      etaSeconds = etaSeconds % 60;
 
-        // Update the Display only if there are messages remaining
-        if (totalMessages !== messagesSent) {
-          document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: ${etaMinutes}m ${Math.round(etaSeconds)}s`;
-        } else {
-          document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages}`;
-        }
+      // Update the Display only if there are messages remaining
+      if (totalMessages !== messagesSent) {
+        document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: ${etaMinutes}m ${Math.round(etaSeconds)}s`;
       } else {
-        document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: Calculating...`;
+        document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages}`;
       }
+    } else {
+      document.getElementById("messages-remaining-display").textContent = `${messagesSent}/${totalMessages} ETA: Calculating...`;
+    }
 
-      // Update previousTime
-      previousTime = currentTime;
+    // Update previousTime
+    previousTime = currentTime;
 
   }
 
@@ -112,7 +112,7 @@
       await sendChatGPTMessage(message.mainPrompt);
       await timeout(timeBetweenMessages_ms);
       await waitForRegenerateResponseButton(sendMessages, message);
-      if (message.useFinalPrompt.toLowerCase() === "true") {
+      if (message.useFinalPrompt.toLowerCase() === "true" ) {
         await timeout(timeBetweenMessages_ms);
         await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
       }
