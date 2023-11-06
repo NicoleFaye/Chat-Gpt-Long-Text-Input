@@ -51,7 +51,6 @@
       await timeout(timeBetweenMessages_ms);
 
     }
-    cancel = false;
   }
 
   function timeout(ms) {
@@ -102,6 +101,23 @@
 
   }
 
+  async function resume(message) {
+    if (url.match("https:\/\/chat.openai.com\/\?.*")) {
+      numberOfMessages = determineNumberOfMessages(message, true);
+      totalMessages = numberOfMessages;
+      messagesSent = 0;
+      timesBetweenMessages = [];
+      previousTime = 0;
+      await waitForRegenerateResponseButton(sendMessages, message);
+      if (message.useFinalPrompt.toLowerCase() === "true" ) {
+        await timeout(timeBetweenMessages_ms);
+        await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
+      }
+    } else {
+      console.log("Wrong Url");
+    }
+
+  }
   async function run(message) {
     if (url.match("https:\/\/chat.openai.com\/\?.*")) {
       numberOfMessages = determineNumberOfMessages(message);
@@ -114,19 +130,24 @@
       await waitForRegenerateResponseButton(sendMessages, message);
       if (message.useFinalPrompt.toLowerCase() === "true" ) {
         await timeout(timeBetweenMessages_ms);
-        await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
+        console.log("Here",cancel);
+        if(!cancel){
+          await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
+        }
       }
     } else {
       console.log("Wrong Url");
     }
   }
 
-  function determineNumberOfMessages(message) {
+  function determineNumberOfMessages(message, resume = false) {
     let subStrings = splitString(message.textToImport, message.maxMessageLength);
     let numberOfMessages = subStrings.length;
 
     // Add one for the mainPrompt message
-    numberOfMessages++;
+    if (!resume) {
+      numberOfMessages++;
+    }
 
     // Add one more if useFinalPrompt is set to true
     if (message.useFinalPrompt.toLowerCase() === "true") {
@@ -200,8 +221,35 @@
       cancel = false;
       run(message);
 
-      // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
+    } else if (message.command === "resume") {
+      // Select the textarea element from the document
+      const textAreaElement = document.getElementById("prompt-textarea");
+      // The button is added to the button container element in the webpage
+      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
+
+      // Create a span element to display the number of messages remaining
+      var messagesRemainingDisplay = document.createElement("span");
+      messagesRemainingDisplay.id = "messages-remaining-display";
+      messagesRemainingDisplay.textContent = "";  // Initially empty
+      messagesRemainingDisplay.style.display = "flex";
+      messagesRemainingDisplay.style.alignItems = "center";
+      messagesRemainingDisplay.style.marginLeft = "10px";  // Add some space between the button and the text
+
+
+      if (buttonContainer.hasChildNodes()) {
+        if (buttonContainer.firstChild.id !== "File-Picker-Button" && buttonContainer.firstChild.id !== "messages-remaining-display") {
+          buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild);
+        } else if (buttonContainer.firstChild.id === "File-Picker-Button") {
+          buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild.nextSibling);
+        }
+      } else {
+        buttonContainer.appendChild(messagesRemainingDisplay);
+      }
+
+      cancel = false;
+      resume(message);
     } else if (message.command === "file-get") {
+      // If the command is 'file-get', it fetches and sends back the contents of a previously stored file
 
       // Fetch and send file content if new, or send back empty content
       if (localStorage.getItem("importFile-new") === "true") {
