@@ -130,7 +130,6 @@
       await waitForRegenerateResponseButton(sendMessages, message);
       if (message.useFinalPrompt.toLowerCase() === "true" ) {
         await timeout(timeBetweenMessages_ms);
-        console.log("Here",cancel);
         if(!cancel){
           await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
         }

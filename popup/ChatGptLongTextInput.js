@@ -234,7 +234,7 @@ function reset() {
 }
 
 function stop(tabs){
-  browser.tabs.sendMessage(tabs[0].id, {
+  chrome.tabs.sendMessage(tabs[0].id, {
     command: "stop",
   }).catch(reportError);
 }
@@ -265,7 +265,7 @@ function listenForClicks() {
       const textToImport = textValue.substring(startIndex);
 
       // Send the message to the tab with the extracted text
-      browser.tabs.sendMessage(tabs[0].id, {
+      chrome.tabs.sendMessage(tabs[0].id, {
         command: "resume",
         maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
         textToImport: textToImport, // Use the extracted substring
