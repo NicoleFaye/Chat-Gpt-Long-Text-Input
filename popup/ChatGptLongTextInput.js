@@ -21,7 +21,7 @@ function determineNumberOfMessages(textToImport, maxMessageLength, useFinalPromp
 function updateTotalMessagesElement() {
   document.getElementById("messageCount").textContent = totalMessages.toString() + " Total messages";
 }
-function updateTotalMessages(){
+function updateTotalMessages() {
   totalMessages = determineNumberOfMessages(document.getElementById("textInput").value, localStorage.getItem("defaultMaxMessageLength"), localStorage.getItem("defaultUseFinalPrompt"));
   updateTotalMessagesElement();
 }
@@ -127,6 +127,59 @@ function showConfirmationPopupOkay(message) {
   });
 }
 
+
+function showTextInputPopup() {
+  return new Promise((resolve, reject) => {
+    const popup = document.createElement("div");
+    popup.classList.add("confirmation-popup");
+
+    const messageLabel = document.createElement("label");
+    messageLabel.textContent = "Paste in a unique string that you want to resume from.";
+    messageLabel.style.display = "block";
+    messageLabel.style.margin = "10px";
+    popup.appendChild(messageLabel);
+
+    const messageInput = document.createElement("textarea");
+    messageInput.style.width = "75%";
+    messageInput.style.height = "100px";
+    messageInput.style.resize = "none";
+    messageInput.style.margin = "20px";
+    popup.appendChild(messageInput);
+
+    const cancelButton = document.createElement("button");
+    cancelButton.textContent = "Cancel";
+    cancelButton.id = "cancel-button";
+    cancelButton.style.marginRight = "10px";
+    cancelButton.addEventListener("click", () => {
+      document.body.removeChild(popup);
+    });
+    popup.appendChild(cancelButton);
+
+    const submitButton = document.createElement("button");
+    submitButton.textContent = "Submit";
+    submitButton.id = "submit-button";
+    submitButton.addEventListener("click", (e) => {
+      if (e.target.id === "submit-button") {
+        resolve(messageInput.value);
+      } else if (e.target.id === "cancel-button") {
+        resolve(null);
+      }
+      const message = messageInput.value;
+      popup.remove();
+    });
+    popup.appendChild(submitButton);
+    document.body.appendChild(popup);
+
+    const popupWidth = popup.offsetWidth;
+    const popupHeight = popup.offsetHeight;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    popup.style.left = (screenWidth - popupWidth) / 2 + "px";
+    popup.style.top = (screenHeight - popupHeight) / 2 + "px";
+
+  });
+}
+
 function showConfirmationPopupYesNo(message) {
   return new Promise((resolve, reject) => {
     const popup = document.createElement("div");
@@ -170,12 +223,54 @@ function isPopupOpen() {
 }
 
 
+
+
+function reset() {
+  resetInputs();
+}
+
+function stop(tabs){
+  browser.tabs.sendMessage(tabs[0].id, {
+    command: "stop",
+  }).catch(reportError);
+}
+
+
+
 /**
  * Listen for clicks on the buttons, and send the appropriate message to
  * the content script in the page.
  */
 function listenForClicks() {
   document.addEventListener("click", (e) => {
+    function resume(tabs, startingString) {
+      // Get the value from the textInput element
+      const textValue = document.getElementById("textInput").value;
+
+      // Find the starting index of the startingString within textValue
+      const startIndex = textValue.indexOf(startingString);
+
+      // Check if the startingString is found within textValue
+      if (startIndex === -1) {
+        // Handle the case where startingString is not found
+        console.error("Starting string not found in text input.");
+        return; // Exit the function if startingString is not found
+      }
+
+      // Extract the substring from the starting index to the end of textValue
+      const textToImport = textValue.substring(startIndex);
+
+      // Send the message to the tab with the extracted text
+      browser.tabs.sendMessage(tabs[0].id, {
+        command: "resume",
+        maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+        textToImport: textToImport, // Use the extracted substring
+        messagePrepend: document.getElementById("messagePrepend").value,
+        messageAppend: document.getElementById("messageAppend").value,
+        useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
+        finalPrompt: document.getElementById("finalPrompt").value,
+      });
+    }
     function run(tabs) {
       browser.tabs.sendMessage(tabs[0].id, {
         command: "run",
@@ -188,16 +283,6 @@ function listenForClicks() {
         finalPrompt: document.getElementById("finalPrompt").value,
       });
     }
-
-
-    function reset(tabs) {
-      resetInputs();
-      browser.tabs.sendMessage(tabs[0].id, {
-        command: "stop",
-      }).catch(reportError);
-    }
-
-
     if (e.target.tagName !== "BUTTON" || isPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
       // Ignore when click is not on a button within <div id="popup-content"> etc
       return;
@@ -261,13 +346,26 @@ function listenForClicks() {
       });
     }
     else if (e.target.id === "reset-button") {
+      reset();
+    }
+    else if (e.target.id === "stop-button") {
       browser.tabs.query({ active: true, currentWindow: true })
-        .then(reset)
+        .then(stop)
         .catch(reportError);
-    } else {
+    }
+     else if (e.target.id === "start-button") {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(run)
         .catch(reportError);
+    } else if (e.target.id === "resume-button") {
+      showTextInputPopup().then((response) => {
+        console.log(response);
+        if (response !== null) {
+          browser.tabs.query({ active: true, currentWindow: true })
+            .then((tabs) => { resume(tabs, response) })
+            .catch(reportError);
+        }
+      });
     }
   });
 
