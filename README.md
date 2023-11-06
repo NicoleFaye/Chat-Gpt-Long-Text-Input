@@ -6,7 +6,9 @@ A browser plugin for ChatGPT that simplifies sending large texts by breaking the
 - Custom prepended message before each section of the of the split up text.
 - Custom appended message after each section of the split up text.
 - Optional Custom final message after completing message input.
-- Reset button resets prompts to defaults and cancels any active input.
+- Reset button resets prompts to defaults 
+- Resume button resumes entry from specified starting point in the input text.
+- Stop buttoncancels any active input.
 - Import text files (.txt, .csv, .xml, etc)
 - Real time estimate of batch completion
 - Display how many messages will be sent before sending
