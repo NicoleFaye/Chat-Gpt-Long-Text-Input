@@ -109,7 +109,7 @@
       timesBetweenMessages = [];
       previousTime = 0;
       await waitForRegenerateResponseButton(sendMessages, message);
-      if (message.useFinalPrompt.toLowerCase() === "true" ) {
+      if (message.useFinalPrompt.toLowerCase() === "true") {
         await timeout(timeBetweenMessages_ms);
         await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
       }
@@ -128,9 +128,9 @@
       await sendChatGPTMessage(message.mainPrompt);
       await timeout(timeBetweenMessages_ms);
       await waitForRegenerateResponseButton(sendMessages, message);
-      if (message.useFinalPrompt.toLowerCase() === "true" ) {
+      if (message.useFinalPrompt.toLowerCase() === "true") {
         await timeout(timeBetweenMessages_ms);
-        if(!cancel){
+        if (!cancel) {
           await waitForRegenerateResponseButton(sendChatGPTMessage, message.finalPrompt);
         }
       }
@@ -156,13 +156,33 @@
     return numberOfMessages;
   }
 
+  function isElementVisible(el) {
+    const rect = el.getBoundingClientRect();
+    const style = getComputedStyle(el);
+
+    return (
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      rect.width > 0 &&
+      rect.height > 0 &&
+      rect.bottom >= 0 &&
+      rect.right >= 0 &&
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
 
   async function waitForRegenerateResponseButton(callback, param1) {
     let isReady = false;
     while (!isReady && !cancel) {
       let buttons = document.querySelectorAll('button');
       for (let i = 0; i < buttons.length; i++) {
-        if (buttons[i].textContent === "Regenerate") {
+        if (buttons[i].className.includes("p-1 gizmo:pl-0 rounded-md disabled:dark:hover:text-gray-400") &&
+          isElementVisible(buttons[i]) &&
+          document.querySelectorAll('button[aria-label="Stop generating"]').length<1
+          ) {
+            console.log("ready");
           isReady = true;
           break;
         }
@@ -189,11 +209,11 @@
   });
 
   chrome.runtime.onMessage.addListener((message) => {
+  // This extension script listens for messages sent from the extension or the webpage
+
+    const textAreaElement = document.getElementById("prompt-textarea");
+    var buttonContainer = textAreaElement.parentNode.parentNode;
     if (message.command === "run") {
-      // Select the textarea element from the document
-      const textAreaElement = document.getElementById("prompt-textarea");
-      // The button is added to the button container element in the webpage
-      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
 
       // Create a span element to display the number of messages remaining
       var messagesRemainingDisplay = document.createElement("span");
@@ -201,10 +221,17 @@
       messagesRemainingDisplay.textContent = "";  // Initially empty
       messagesRemainingDisplay.style.display = "flex";
       messagesRemainingDisplay.style.alignItems = "center";
-      messagesRemainingDisplay.style.marginLeft = "10px";  // Add some space between the button and the text
+      messagesRemainingDisplay.style.marginInline = "10px";  // Add some space between the button and the text
 
 
       if (buttonContainer.hasChildNodes()) {
+        //loop through the children of the button container to make sure none have the id of messages-remaining-display
+        for (let i = 0; i < buttonContainer.childNodes.length; i++) {
+          if (buttonContainer.childNodes[i].id === "messages-remaining-display") {
+            buttonContainer.removeChild(buttonContainer.childNodes[i]);
+          }
+        }
+
         if (buttonContainer.firstChild.id !== "File-Picker-Button" && buttonContainer.firstChild.id !== "messages-remaining-display") {
           buttonContainer.insertBefore(messagesRemainingDisplay, buttonContainer.firstChild);
         } else if (buttonContainer.firstChild.id === "File-Picker-Button") {
@@ -218,10 +245,6 @@
       run(message);
 
     } else if (message.command === "resume") {
-      // Select the textarea element from the document
-      const textAreaElement = document.getElementById("prompt-textarea");
-      // The button is added to the button container element in the webpage
-      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
 
       // Create a span element to display the number of messages remaining
       var messagesRemainingDisplay = document.createElement("span");
@@ -286,8 +309,6 @@
       // Append the file input element to the document body
       document.body.appendChild(filePicker);
 
-      // The button is added to the button container element in the webpage
-      var buttonContainer = textAreaElement.parentNode.parentNode.previousSibling.firstChild;
 
       // Create and style a button that will trigger the hidden file input when clicked
       var filePickerButton = document.createElement("button");
@@ -303,6 +324,7 @@
       filePickerButton.style.height = "32px";
       filePickerButton.style.width = "32px";
       filePickerButton.style.alignSelf = "center";
+      filePickerButton.style.marginInline = "10px";
 
       if (buttonContainer.hasChildNodes()) {
         if (buttonContainer.firstChild.id !== "File-Picker-Button") {
