@@ -180,7 +180,6 @@
       for (let i = 0; i < buttons.length; i++) {
         if (buttons[i].className.includes("p-1 gizmo:pl-0 rounded-md disabled:dark:hover:text-gray-400") &&
           isElementVisible(buttons[i]) &&
-          getLastMessageNumber > lastMessageID &&
           document.querySelectorAll('button[aria-label="Stop generating"]').length<1
           ) {
             console.log("ready");
