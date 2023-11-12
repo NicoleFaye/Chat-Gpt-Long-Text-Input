@@ -1,37 +1,41 @@
+/**
+ * Function to split a given string into substrings of a specified maximum length.
+ * This function can split by words or by lines, ensuring that words or lines are kept intact.
+ * 
+ * @param {string} str - The string to be split.
+ * @param {number} maxLength - The maximum length of each substring.
+ * @param {boolean} splitOnLineBreaks - If true, splits by lines; otherwise, splits by words.
+ * @returns {string[]} An array of substrings.
+ */
+function splitString(str, maxLength, splitOnLineBreaks = false) {
+  // Choose the splitting pattern based on splitOnLineBreaks.
+  console.log(splitOnLineBreaks);
+  console.log(maxLength);
+  let regex = splitOnLineBreaks ? /(\r\n|\r|\n)/ : /(?<=\S)(?=\s|$)/;
 
-  /**
-   * Function to split a given string into substrings of a specified maximum length.
-   * This function will not split words, it will keep words intact while splitting.
-   * 
-   * @param {string} str - The string to be split.
-   * @param {number} maxLength - The maximum length of each substring.
-   * @returns {string[]} An array of substrings.
-   */
-function splitString(str, maxLength) {
-  let regex = /(?<=\S)(?=\s|$)/;
-
-  // Split the input string into words by the chosen regex while keeping the trailing spaces.
-  let words = str.split(regex);
+  // Split the input string into words or lines.
+  let splitItems = str.split(regex);
 
   // Initialize an array to hold the substrings that we will return.
   let substrings = [];
 
-  // Initialize a string to accumulate words until we reach the maxLength.
+  // Initialize a string to accumulate words or lines until we reach the maxLength.
   let currentString = "";
 
-  // Loop over each word in the words array.
-  for (let word of words) {
-    // Here we add 1 for the space that would be between the words in the substring
-    if (currentString.length + word.length + (currentString.length > 0 ? 1 : 0) <= maxLength) {
-      // Add a space if currentString is not empty and append the word.
-      currentString += (currentString.length > 0 ? " " : "") + word;
+  // Loop over each word or line in the splitItems array.
+  for (let item of splitItems) {
+    // Add the item length + potential space or newline.
+    let additionalLength = splitOnLineBreaks ? item.length : (item.length + (currentString.length > 0 ? 1 : 0));
+
+    if (currentString.length + additionalLength <= maxLength) {
+      // Append the item with a space or keep the line break.
+      currentString += (splitOnLineBreaks || currentString.length === 0 ? "" : " ") + item;
     } else {
-      // If it doesn't fit, push the currentString into the substrings array.
+      // If it doesn't fit, push the currentString into the substrings array and start new.
       if (currentString.length > 0) {
         substrings.push(currentString);
       }
-      // Start a new currentString with the current word.
-      currentString = word;
+      currentString = item;
     }
   }
 
@@ -43,4 +47,3 @@ function splitString(str, maxLength) {
   // Return the array of substrings.
   return substrings;
 }
-

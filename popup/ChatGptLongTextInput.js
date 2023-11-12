@@ -3,7 +3,7 @@ var defaultValues = {};
 var totalMessages = 0;
 
 function determineNumberOfMessages(textToImport, maxMessageLength, useFinalPrompt) {
-  let subStrings = splitString(textToImport, maxMessageLength);
+  let subStrings = splitString(textToImport, maxMessageLength, localStorage.getItem("defaultSplitOnLineBreaks") === 'true');
   let numberOfMessages = subStrings.length;
 
   // Add one for the mainPrompt message
@@ -38,6 +38,7 @@ async function getConfig() {
       maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
       useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
       finalPrompt: localStorage.getItem("defaultFinalPrompt"),
+      splitOnLineBreaks: localStorage.getItem("defaultSplitOnLineBreaks"),
     };
   } else {
     // Otherwise, fetch default values from config.json
@@ -59,6 +60,7 @@ async function getJsonConfig() {
     maxMessageLength: config.maxMessageLength,
     useFinalPrompt: config.useFinalPrompt,
     finalPrompt: config.finalPrompt,
+    splitOnLineBreaks: config.splitOnLineBreaks,
   };
   localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
   localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
@@ -66,6 +68,7 @@ async function getJsonConfig() {
   localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
   localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
   localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
+  localStorage.setItem('defaultSplitOnLineBreaks', defaultValues.splitOnLineBreaks);
 }
 
 getConfig();
@@ -273,6 +276,7 @@ function listenForClicks() {
         messageAppend: document.getElementById("messageAppend").value,
         useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
         finalPrompt: document.getElementById("finalPrompt").value,
+        splitOnLineBreaks: localStorage.getItem("defaultSplitOnLineBreaks"),
       });
     }
     function run(tabs) {
@@ -285,6 +289,7 @@ function listenForClicks() {
         messageAppend: document.getElementById("messageAppend").value,
         useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
         finalPrompt: document.getElementById("finalPrompt").value,
+        splitOnLineBreaks: localStorage.getItem("defaultSplitOnLineBreaks"),
       });
     }
     if (e.target.tagName !== "BUTTON" || isPopupOpen() || !(e.target.closest("#popup-content") || e.target.closest("#settings-content"))) {
@@ -300,6 +305,7 @@ function listenForClicks() {
       document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
       document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt === 'true';
       document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
+      document.getElementById("defaultSplitOnLineBreaks").checked = defaultValues.splitOnLineBreaks === 'true';
     }
     else if (e.target.id === "close-button") {
       settingsContent.classList.toggle("show");
@@ -324,12 +330,14 @@ function listenForClicks() {
       defaultValues.maxMessageLength = document.getElementById("defaultMaxMessageLength").value;
       defaultValues.useFinalPrompt = document.getElementById("defaultUseFinalPrompt").checked.toString();
       defaultValues.finalPrompt = document.getElementById("defaultFinalPrompt").value;
+      defaultValues.splitOnLineBreaks = document.getElementById("defaultSplitOnLineBreaks").checked.toString();
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
       localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
       localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
       localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
+      localStorage.setItem('defaultSplitOnLineBreaks', defaultValues.splitOnLineBreaks);
       updateFinalMessageDisplay();
       updateTotalMessages();
     }
@@ -343,7 +351,9 @@ function listenForClicks() {
             document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt === 'true';
             document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
             document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
+            document.getElementById("defaultSplitOnLineBreaks").checked = defaultValues.splitOnLineBreaks === 'true';
             settingsContent.classList.toggle("show");
+            updateTotalMessages();
           }
           );
         }
@@ -365,7 +375,6 @@ function listenForClicks() {
         .catch(reportError);
     } else if (e.target.id === "resume-button") {
       showTextInputPopup().then((response) => {
-        console.log(response);
         if (response !== null) {
           chrome.tabs.query({ active: true, currentWindow: true })
             .then((tabs) => { resume(tabs, response) })
