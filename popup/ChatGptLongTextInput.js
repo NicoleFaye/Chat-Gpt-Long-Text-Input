@@ -392,8 +392,14 @@ window.addEventListener("visibilitychange", (event) => {
   localStorage.setItem("popupData", JSON.stringify(data));
 });
 
+var countUpdateTimeout;
+function delayUpdateTotalMessages() {
+  clearTimeout(countUpdateTimeout);
+  countUpdateTimeout= setTimeout(updateTotalMessages, 500);
+}
+
 //listener for when the textInput value changes
-document.getElementById("textInput").addEventListener("input", updateTotalMessages);
+document.getElementById("textInput").addEventListener("input", delayUpdateTotalMessages);
 
 
 /**
