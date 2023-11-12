@@ -1,3 +1,4 @@
+const TikToken = require('js-tiktoken');
 /**
  * Function to split a given string into substrings of a specified maximum length.
  * This function can split by words or by lines, ensuring that words or lines are kept intact.
@@ -9,8 +10,6 @@
  */
 function splitString(str, maxLength, splitOnLineBreaks = false) {
   // Choose the splitting pattern based on splitOnLineBreaks.
-  console.log(splitOnLineBreaks);
-  console.log(maxLength);
   let regex = splitOnLineBreaks ? /(\r\n|\r|\n)/ : /(?<=\S)(?=\s|$)/;
 
   // Split the input string into words or lines.
@@ -47,3 +46,5 @@ function splitString(str, maxLength, splitOnLineBreaks = false) {
   // Return the array of substrings.
   return substrings;
 }
+
+export default splitString;

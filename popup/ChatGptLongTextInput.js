@@ -1,3 +1,4 @@
+import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js";
 var config = {};
 var defaultValues = {};
 var totalMessages = 0;
@@ -232,7 +233,7 @@ function reset() {
   resetInputs();
 }
 
-function stop(tabs){
+function stop(tabs) {
   browser.tabs.sendMessage(tabs[0].id, {
     command: "stop",
   }).catch(reportError);
@@ -363,7 +364,7 @@ function listenForClicks() {
         .then(stop)
         .catch(reportError);
     }
-     else if (e.target.id === "start-button") {
+    else if (e.target.id === "start-button") {
       browser.tabs.query({ active: true, currentWindow: true })
         .then(run)
         .catch(reportError);
@@ -434,11 +435,9 @@ function handleBrowserAction() {
 function injectScript(tabs) {
   try {
     // First inject the shared methods 
-    browser.tabs.executeScript(tabs[0].id, { file: "/content_scripts/ChatGptLongTextInputSharedMethods.js" }).then(() => {
-      // Then inject the content_script.js
-      browser.tabs.executeScript(tabs[0].id, { file: "/content_scripts/ChatGptLongTextInputContentScript.js" });
-      browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
-    });
+    // Then inject the content_script.js
+    browser.tabs.executeScript(tabs[0].id, { file: "/contentScript.bundle.js" });
+    browser.tabs.sendMessage(tabs[0].id, { command: "file-get" }).catch(reportError);
   }
   catch (error) {
     reportError(error);

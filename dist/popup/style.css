@@ -1,0 +1,238 @@
+html,
+body {
+  width: 425px;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  background-color: #2e2e2e;
+  color: #fff;
+}
+
+.textInput-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.textInput-container label{
+  margin: 0px 0;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  display: inline;
+}
+.textInput-container p {
+  margin: 0px 0;
+  font-size: .9em;
+  font-family: 'Open Sans', sans-serif;
+  display: inline;
+}
+
+.textInput-container p {
+  margin-left: 5%;
+}
+
+.hidden {
+  display: none;
+}
+
+.button-container {
+  display: flex;
+}
+
+.button-container button {
+  border: none;
+  margin: 8px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #1e1e1e;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+}
+
+button {
+  border: none;
+  margin: 8px;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #1e1e1e;
+  color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.button-container button:last-child,
+.textInput-container button:last-child {
+  margin-left: auto;
+}
+
+.centered-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input,
+textarea {
+  width: calc(100% - 35px);
+  margin: 8px 0;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  resize: vertical;
+  background-color: #333;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+}
+
+label,h1 {
+  font-family: 'Open Sans', sans-serif;
+}
+
+input {
+  font-size: .75em;
+}
+
+textarea {
+  font-size: .85em;
+  height: 200px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #50a1e4;
+  box-shadow: 0 2px 4px rgba(80, 161, 228, 0.5);
+  outline: none;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+#close-button {
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  background-image: url('/icons/X48.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.2s ease-in-out;
+}
+
+#file-button {
+  padding: 3px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: .75em;
+}
+
+#settings-button {
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  cursor: pointer;
+  background-image: url('/icons/cog48.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.4s ease-in-out;
+}
+
+#settings-button:hover {
+  transform: rotate(90deg) scale(1.15);
+}
+
+#close-button:hover {
+  transform: scale(1.1);
+}
+
+
+
+button[type="start"] {
+  width: 50%;
+}
+
+button[type="reset"] {
+  background-color: #9a0707e7;
+  width: 25%;
+}
+
+#hard-reset-button {
+  background-color: #9a0707e7;
+  width: 35%;
+
+}
+
+#hard-reset-button:hover,
+button[type="reset"]:hover {
+  background-color: #660000;
+}
+
+#popup-content {
+  position: relative;
+}
+
+#settings-content {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  border: 3px solid #1e1e1e;
+  border-radius: 10px;
+}
+
+#settings-content.show {
+  top: 0;
+}
+
+
+.confirmation-popup {
+  position: absolute;
+  width: 75%;
+  z-index: 9999;
+  background-color: #333;
+  border-radius: 10px;
+  border: 3px solid #1e1e1e;
+  /* Add other styles for the popup here */
+}
+
+.confirmation-text {
+  margin: 8px;
+  font-size: 1.1em;
+}
+
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.checkbox-container label {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 100%;
+  margin-left: auto;
+  flex-shrink: 0;
+  scale: 1.5;
+  margin-right: 10px;
+}

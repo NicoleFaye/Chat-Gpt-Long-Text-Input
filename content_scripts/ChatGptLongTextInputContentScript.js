@@ -1,4 +1,4 @@
-
+import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js";
 (async function () {
   /**
    * Check and set a global guard variable.
@@ -9,7 +9,7 @@
     return;
   }
   window.hasRun = true;
-  url = window.location.href;
+  let url = window.location.href;
   let cancel = false;
 
   // Initialize Timing Variables
@@ -22,6 +22,7 @@
   var timeBetweenMessages_ms;
   var totalMessages = 0;
   var messagesSent = 0;
+  var numberOfMessages = 0;
 
   getConfig();
 
@@ -38,7 +39,7 @@
   }
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport, message.maxMessageLength,message.splitOnLineBreaks);
+    let subStrings = splitString(message.textToImport, message.maxMessageLength,message.splitOnLineBreaks);
 
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
