@@ -182,7 +182,6 @@
           isElementVisible(buttons[i]) &&
           document.querySelectorAll('button[aria-label="Stop generating"]').length<1
           ) {
-            console.log("ready");
           isReady = true;
           break;
         }
