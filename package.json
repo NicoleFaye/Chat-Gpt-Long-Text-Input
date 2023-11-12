@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "copy-webpack-plugin": "^11.0.0",
-    "js-tiktoken": "^1.0.7"
+    "tiktoken": "^1.0.10"
   }
 }

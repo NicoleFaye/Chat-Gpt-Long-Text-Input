@@ -6,7 +6,6 @@ var totalMessages = 0;
 function determineNumberOfMessages(textToImport, maxMessageLength, useFinalPrompt) {
   let subStrings = splitString(textToImport, maxMessageLength, localStorage.getItem("defaultSplitOnLineBreaks") === 'true');
   let numberOfMessages = subStrings.length;
-
   // Add one for the mainPrompt message
   numberOfMessages++;
 
