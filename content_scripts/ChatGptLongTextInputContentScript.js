@@ -38,7 +38,7 @@
   }
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport, message.maxMessageLength);
+    subStrings = splitString(message.textToImport, message.maxMessageLength,message.splitOnLineBreaks);
 
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
@@ -140,7 +140,7 @@
   }
 
   function determineNumberOfMessages(message, resume = false) {
-    let subStrings = splitString(message.textToImport, message.maxMessageLength);
+    let subStrings = splitString(message.textToImport, message.maxMessageLength, message.splitOnLineBreaks);
     let numberOfMessages = subStrings.length;
 
     // Add one for the mainPrompt message
@@ -212,7 +212,6 @@
 
     const textAreaElement = document.getElementById("prompt-textarea");
     var buttonContainer = textAreaElement.parentNode.parentNode;
-    console.log(buttonContainer);
     if (message.command === "run") {
 
       // Create a span element to display the number of messages remaining
