@@ -38,7 +38,7 @@
   }
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport, message.maxMessageLength);
+    subStrings = splitString(message.textToImport, message.maxMessageLength,message.splitOnLineBreaks);
 
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
@@ -180,10 +180,8 @@
       for (let i = 0; i < buttons.length; i++) {
         if (buttons[i].className.includes("p-1 gizmo:pl-0 rounded-md disabled:dark:hover:text-gray-400") &&
           isElementVisible(buttons[i]) &&
-          getLastMessageNumber > lastMessageID &&
           document.querySelectorAll('button[aria-label="Stop generating"]').length<1
           ) {
-            console.log("ready");
           isReady = true;
           break;
         }
@@ -214,7 +212,6 @@
 
     const textAreaElement = document.getElementById("prompt-textarea");
     var buttonContainer = textAreaElement.parentNode.parentNode;
-    console.log(buttonContainer);
     if (message.command === "run") {
 
       // Create a span element to display the number of messages remaining
