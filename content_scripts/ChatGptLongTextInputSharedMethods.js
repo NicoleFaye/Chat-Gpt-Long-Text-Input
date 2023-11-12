@@ -1,4 +1,4 @@
-const TikToken = require('js-tiktoken');
+import { getEncoding, encodingForModel } from "js-tiktoken";
 /**
  * Function to split a given string into substrings of a specified maximum length.
  * This function can split by words or by lines, ensuring that words or lines are kept intact.
