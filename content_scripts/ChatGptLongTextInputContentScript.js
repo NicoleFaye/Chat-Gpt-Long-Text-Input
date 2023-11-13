@@ -39,7 +39,7 @@ import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js
   }
 
   async function sendMessages(message) {
-    let subStrings = splitString(message.textToImport, message.maxMessageLength,message.splitOnLineBreaks);
+    let subStrings = splitString(message.textToImport, message.maxMessageTokenLength,message.splitOnLineBreaks);
 
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
@@ -141,7 +141,7 @@ import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js
   }
 
   function determineNumberOfMessages(message, resume = false) {
-    let subStrings = splitString(message.textToImport, message.maxMessageLength, message.splitOnLineBreaks);
+    let subStrings = splitString(message.textToImport, message.maxMessageTokenLength, message.splitOnLineBreaks);
     let numberOfMessages = subStrings.length;
 
     // Add one for the mainPrompt message
