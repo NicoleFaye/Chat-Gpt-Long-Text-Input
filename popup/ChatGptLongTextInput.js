@@ -317,7 +317,6 @@ function listenForClicks() {
         })
           .catch((error) => {
             showConfirmationPopupOkay("Error. Make sure you are on the right web page.");
-            showConfirmationPopupOkay(error);
           });
       });
     }
