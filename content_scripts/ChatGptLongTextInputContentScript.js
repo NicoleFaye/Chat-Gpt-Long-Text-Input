@@ -283,7 +283,7 @@ import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js
     } else if (message.command === "stop") {
       cancel = true;
     } else if (message.command === "messageCount") {
-      browser.runtime.sendMessage({ command: "messageCount", content: determineNumberOfMessages(message) });
+      chrome.runtime.sendMessage({ command: "messageCount", content: determineNumberOfMessages(message) });
 
       // If the command is 'file-pick', it adds a file picker button to the webpage, which, when clicked, will open a file dialog.
       // The selected file's content is read and stored for future use 
