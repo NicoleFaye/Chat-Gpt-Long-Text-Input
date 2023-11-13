@@ -1,4 +1,4 @@
-
+import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js";
 (async function () {
   /**
    * Check and set a global guard variable.
@@ -9,7 +9,7 @@
     return;
   }
   window.hasRun = true;
-  url = window.location.href;
+  let url = window.location.href;
   let cancel = false;
 
   // Initialize Timing Variables
@@ -22,6 +22,7 @@
   var timeBetweenMessages_ms;
   var totalMessages = 0;
   var messagesSent = 0;
+  var numberOfMessages = 0;
 
   getConfig();
 
@@ -38,7 +39,7 @@
   }
 
   async function sendMessages(message) {
-    subStrings = splitString(message.textToImport, message.maxMessageLength,message.splitOnLineBreaks);
+    let subStrings = splitString(message.textToImport, message.maxMessageTokenLength,message.splitOnLineBreaks);
 
     for (var i = 0; i < subStrings.length; i++) {
       var element = subStrings[i];
@@ -140,7 +141,7 @@
   }
 
   function determineNumberOfMessages(message, resume = false) {
-    let subStrings = splitString(message.textToImport, message.maxMessageLength, message.splitOnLineBreaks);
+    let subStrings = splitString(message.textToImport, message.maxMessageTokenLength, message.splitOnLineBreaks);
     let numberOfMessages = subStrings.length;
 
     // Add one for the mainPrompt message
@@ -281,6 +282,8 @@
       // If the command is 'stop', it sets a cancellation flag
     } else if (message.command === "stop") {
       cancel = true;
+    } else if (message.command === "messageCount") {
+      chrome.runtime.sendMessage({ command: "messageCount", content: determineNumberOfMessages(message) });
 
       // If the command is 'file-pick', it adds a file picker button to the webpage, which, when clicked, will open a file dialog.
       // The selected file's content is read and stored for future use 

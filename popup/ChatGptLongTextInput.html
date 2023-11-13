@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="ChatGptLongTextInput.css" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
 
   <body>
@@ -33,8 +33,9 @@
       </div>
       <div class="textInput-container">
         <label for="textInput">Text to import</label>
-        <p id="messageCount"></p>
-        <button id="file-button">Enable File Picker Button</button>
+        <p id="messageCount" class="hidden"></p>
+        <button id="messageCount-button">Get Message Count</button>
+        <button id="file-button">Enable File Button</button>
       </div>
       <textarea id="textInput"></textarea>
 
@@ -72,15 +73,15 @@
       </div>
       <label for="defaultFinalPrompt">Final Message</label>
       <input id="defaultFinalPrompt" type="text" autocomplete="off" />
-      <label for="defaultMaxMessageLength">Max Characters per Message</label>
+      <label for="defaultMaxMessageLength">Max Tokens per Message</label>
       <input id="defaultMaxMessageLength" type="number" autocomplete="off" />
       <div class="button-container">
         <button type="save" id="save-button">Save</button>
         <button type="hard-reset" id="hard-reset-button">Hard Reset</button>
       </div>
     </div>
-    <script src="../content_scripts/ChatGptLongTextInputSharedMethods.js"></script>
-    <script src="ChatGptLongTextInput.js"></script>
+    <script src="../sharedMethods.bundle.js"></script>
+    <script src="../popup.bundle.js"></script>
   </body>
 
 </html>
