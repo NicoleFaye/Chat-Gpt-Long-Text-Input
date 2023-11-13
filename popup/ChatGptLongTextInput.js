@@ -333,7 +333,6 @@ function listenForClicks() {
       localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
       localStorage.setItem('defaultSplitOnLineBreaks', defaultValues.splitOnLineBreaks);
       updateFinalMessageDisplay();
-      updateTotalMessages();
     }
     else if (e.target.id === "hard-reset-button") {
       showConfirmationPopupYesNo("Are you sure you want to restore the original default values?").then((response) => {
@@ -347,7 +346,6 @@ function listenForClicks() {
             document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
             document.getElementById("defaultSplitOnLineBreaks").checked = defaultValues.splitOnLineBreaks === 'true';
             settingsContent.classList.toggle("show");
-            updateTotalMessages();
           }
           );
         }
@@ -392,14 +390,9 @@ window.addEventListener("visibilitychange", (event) => {
   localStorage.setItem("popupData", JSON.stringify(data));
 });
 
-var countUpdateTimeout;
-function delayUpdateTotalMessages() {
-  clearTimeout(countUpdateTimeout);
-  countUpdateTimeout= setTimeout(updateTotalMessages, 500);
-}
 
 //listener for when the textInput value changes
-document.getElementById("textInput").addEventListener("input", delayUpdateTotalMessages);
+//document.getElementById("textInput").addEventListener("input", updateTotalMessages);
 
 
 /**
@@ -423,7 +416,6 @@ browser.runtime.onMessage.addListener((message) => {
   }
 });
 
-//document.addEventListener("DOMContentLoaded",updateFinalMessageDisplay);
 
 
 function reportError(err) {
@@ -435,7 +427,6 @@ function handleBrowserAction() {
   browser.tabs.query({ active: true, currentWindow: true })
     .then(injectScript);
   listenForClicks();
-  updateTotalMessages();
 }
 function injectScript(tabs) {
   try {
