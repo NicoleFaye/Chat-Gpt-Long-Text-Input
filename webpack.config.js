@@ -9,9 +9,6 @@ module.exports = {
         contentScript: './content_scripts/ChatGptLongTextInputContentScript.js',
         sharedMethods: './content_scripts/ChatGptLongTextInputSharedMethods.js',
     },
-    experiments: {
-        asyncWebAssembly: true
-    },
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist'),
@@ -21,10 +18,6 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.wasm$/,
-                type: 'webassembly/async',
             },
         ],
     },

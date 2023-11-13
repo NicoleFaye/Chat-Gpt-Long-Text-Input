@@ -1,5 +1,4 @@
-import { Tiktoken } from "tiktoken/lite";
-import cl100k_base from "tiktoken/encoders/cl100k_base.json";
+import { getEncoding } from "js-tiktoken";
 /**
  * Function to split a given string into substrings of a specified maximum token length.
  * 
@@ -10,11 +9,7 @@ import cl100k_base from "tiktoken/encoders/cl100k_base.json";
  */
 function splitString(str, maxTokenLength, splitOnLineBreaks = false) {
   // Get the encoding for a specific model
-  const encoding = new Tiktoken(
-  cl100k_base.bpe_ranks,
-  cl100k_base.special_tokens,
-  cl100k_base.pat_str
-);
+  const encoding = getEncoding("cl100k_base");
 
   let regex = splitOnLineBreaks ? /(\r\n|\r|\n)/ : /(?<=\S)(?=\s|$)/;
   let splitItems = str.split(regex);

@@ -1,29 +1,18 @@
-import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js";
 var config = {};
 var defaultValues = {};
 var totalMessages = 0;
 
-function determineNumberOfMessages(textToImport, maxMessageLength, useFinalPrompt) {
-  let subStrings = splitString(textToImport, maxMessageLength, localStorage.getItem("defaultSplitOnLineBreaks") === 'true');
-  let numberOfMessages = subStrings.length;
-  // Add one for the mainPrompt message
-  numberOfMessages++;
 
-  // Add one more if useFinalPrompt is set to true
-  if (useFinalPrompt.toLowerCase() === "true") {
-    numberOfMessages++;
+function updateTotalMessagesElement(count) {
+  if (count === 0) {
+    document.getElementById("messageCount").textContent = totalMessages.toString() + " Total messages";
+  } else {
+    document.getElementById("messageCount").textContent = count.toString() + " Total messages";
+    document.getElementById("messageCount-button").textContent = "Redo";
   }
-
-  return numberOfMessages;
 }
-
-
-function updateTotalMessagesElement() {
-  document.getElementById("messageCount").textContent = totalMessages.toString() + " Total messages";
-}
-function updateTotalMessages() {
-  totalMessages = determineNumberOfMessages(document.getElementById("textInput").value, localStorage.getItem("defaultMaxMessageLength"), localStorage.getItem("defaultUseFinalPrompt"));
-  updateTotalMessagesElement();
+async function updateTotalMessages(count = 0) {
+  updateTotalMessagesElement(count);
 }
 
 async function getConfig() {
@@ -95,7 +84,8 @@ function resetInputs() {
   document.getElementById("messagePrepend").value = defaultValues.messagePrepend;
   document.getElementById("messageAppend").value = defaultValues.messageAppend;
   document.getElementById("finalPrompt").value = defaultValues.finalPrompt;
-  updateTotalMessages();
+  document.getElementById("messageCount").textContent = "";
+  document.getElementById("messageCount-button").textContent = "Get Message Count";
 }
 
 
@@ -316,6 +306,21 @@ function listenForClicks() {
         reportError(error);
       });
     }
+    else if (e.target.id === "messageCount-button") {
+      browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, {
+          command: "messageCount",
+          maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+          textToImport: document.getElementById("textInput").value,
+          useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
+          splitOnLineBreaks: localStorage.getItem("defaultSplitOnLineBreaks"),
+        })
+          .catch((error) => {
+            showConfirmationPopupOkay("Error. Make sure you are on the right web page.");
+            showConfirmationPopupOkay(error);
+          });
+      });
+    }
     else if (e.target.id === "save-button") {
       settingsContent.classList.toggle("show");
       defaultValues.mainPrompt = document.getElementById("defaultMainPrompt").value;
@@ -413,6 +418,8 @@ browser.runtime.onMessage.addListener((message) => {
     const fileContent = message.content;
     if (fileContent !== "")
       document.getElementById("textInput").value = fileContent;
+  } else if (message.command === "messageCount") {
+    updateTotalMessages(message.content);
   }
 });
 
