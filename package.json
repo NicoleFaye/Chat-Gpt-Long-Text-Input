@@ -1,6 +1,6 @@
 {
   "name": "chatgptlongtextinput",
-  "version": "1.7.2",
+  "version": "1.8.1",
   "description": "A browser plugin for ChatGPT that simplifies sending large texts by breaking them into multiple messages.",
   "main": "popup/ChatGptLongTextInput.js",
   "scripts": {
