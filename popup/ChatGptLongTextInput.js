@@ -24,7 +24,7 @@ async function getConfig() {
       mainPrompt: localStorage.getItem('defaultMainPrompt'),
       messagePrepend: localStorage.getItem('defaultMessagePrepend'),
       messageAppend: localStorage.getItem('defaultMessageAppend'),
-      maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+      maxMessageTokenLength: localStorage.getItem("defaultMaxMessageLength"),
       useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
       finalPrompt: localStorage.getItem("defaultFinalPrompt"),
       splitOnLineBreaks: localStorage.getItem("defaultSplitOnLineBreaks"),
@@ -46,7 +46,7 @@ async function getJsonConfig() {
     mainPrompt: config.mainPrompt,
     messagePrepend: config.messagePrepend,
     messageAppend: config.messageAppend,
-    maxMessageLength: config.maxMessageLength,
+    maxMessageTokenLength: config.maxMessageTokenLength,
     useFinalPrompt: config.useFinalPrompt,
     finalPrompt: config.finalPrompt,
     splitOnLineBreaks: config.splitOnLineBreaks,
@@ -54,7 +54,7 @@ async function getJsonConfig() {
   localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
   localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
   localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
-  localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
+  localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageTokenLength);
   localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
   localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
   localStorage.setItem('defaultSplitOnLineBreaks', defaultValues.splitOnLineBreaks);
@@ -260,7 +260,7 @@ function listenForClicks() {
       // Send the message to the tab with the extracted text
       chrome.tabs.sendMessage(tabs[0].id, {
         command: "resume",
-        maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+        maxMessageTokenLength: localStorage.getItem("defaultMaxMessageLength"),
         textToImport: textToImport, // Use the extracted substring
         messagePrepend: document.getElementById("messagePrepend").value,
         messageAppend: document.getElementById("messageAppend").value,
@@ -272,7 +272,7 @@ function listenForClicks() {
     function run(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {
         command: "run",
-        maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+        maxMessageTokenLength: localStorage.getItem("defaultMaxMessageLength"),
         textToImport: document.getElementById("textInput").value,
         mainPrompt: document.getElementById("mainPrompt").value,
         messagePrepend: document.getElementById("messagePrepend").value,
@@ -291,8 +291,7 @@ function listenForClicks() {
       document.getElementById("defaultMainPrompt").value = defaultValues.mainPrompt;
       document.getElementById("defaultPrepend").value = defaultValues.messagePrepend;
       document.getElementById("defaultAppend").value = defaultValues.messageAppend;
-      console.log(defaultValues);
-      document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
+      document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageTokenLength;
       document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt === 'true';
       document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
       document.getElementById("defaultSplitOnLineBreaks").checked = defaultValues.splitOnLineBreaks === 'true';
@@ -316,7 +315,7 @@ function listenForClicks() {
       chrome.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, {
           command: "messageCount",
-          maxMessageLength: localStorage.getItem("defaultMaxMessageLength"),
+          maxMessageTokenLength: localStorage.getItem("defaultMaxMessageLength"),
           textToImport: document.getElementById("textInput").value,
           useFinalPrompt: localStorage.getItem("defaultUseFinalPrompt"),
           splitOnLineBreaks: localStorage.getItem("defaultSplitOnLineBreaks"),
@@ -331,14 +330,14 @@ function listenForClicks() {
       defaultValues.mainPrompt = document.getElementById("defaultMainPrompt").value;
       defaultValues.messagePrepend = document.getElementById("defaultPrepend").value;
       defaultValues.messageAppend = document.getElementById("defaultAppend").value;
-      defaultValues.maxMessageLength = document.getElementById("defaultMaxMessageLength").value;
+      defaultValues.maxMessageTokenLength = document.getElementById("defaultMaxMessageLength").value;
       defaultValues.useFinalPrompt = document.getElementById("defaultUseFinalPrompt").checked.toString();
       defaultValues.finalPrompt = document.getElementById("defaultFinalPrompt").value;
       defaultValues.splitOnLineBreaks = document.getElementById("defaultSplitOnLineBreaks").checked.toString();
       localStorage.setItem('defaultMainPrompt', defaultValues.mainPrompt);
       localStorage.setItem('defaultMessagePrepend', defaultValues.messagePrepend);
       localStorage.setItem('defaultMessageAppend', defaultValues.messageAppend);
-      localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageLength);
+      localStorage.setItem('defaultMaxMessageLength', defaultValues.maxMessageTokenLength);
       localStorage.setItem('defaultUseFinalPrompt', defaultValues.useFinalPrompt);
       localStorage.setItem('defaultFinalPrompt', defaultValues.finalPrompt);
       localStorage.setItem('defaultSplitOnLineBreaks', defaultValues.splitOnLineBreaks);
@@ -353,7 +352,7 @@ function listenForClicks() {
             document.getElementById("defaultAppend").value = defaultValues.messageAppend;
             document.getElementById("defaultUseFinalPrompt").checked = defaultValues.useFinalPrompt === 'true';
             document.getElementById("defaultFinalPrompt").value = defaultValues.finalPrompt;
-            document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageLength;
+            document.getElementById("defaultMaxMessageLength").value = defaultValues.maxMessageTokenLength;
             document.getElementById("defaultSplitOnLineBreaks").checked = defaultValues.splitOnLineBreaks === 'true';
             settingsContent.classList.toggle("show");
           }
