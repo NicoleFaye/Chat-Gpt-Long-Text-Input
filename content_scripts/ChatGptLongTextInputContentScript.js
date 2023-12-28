@@ -179,7 +179,7 @@ import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js
     while (!isReady && !cancel) {
       let buttons = document.querySelectorAll('button');
       for (let i = 0; i < buttons.length; i++) {
-        if (buttons[i].className.includes("p-1 gizmo:pl-0 rounded-md disabled:dark:hover:text-gray-400") &&
+        if (buttons[i].className.includes("absolute md:bottom-3 md:right-3") &&
           isElementVisible(buttons[i]) &&
           document.querySelectorAll('button[aria-label="Stop generating"]').length<1
           ) {
