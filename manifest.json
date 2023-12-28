@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "description": "A browser plugin for ChatGPT that simplifies sending large texts by breaking them into multiple messages. Features include custom message options, text file importing, and real-time progress estimates.",
+  "description": "A browser plugin for ChatGPT that simplifies sending large texts by breaking them into multiple messages.",
   "name": "Chat Gpt Long Text Input",
   "version": "1.8.3",
   "homepage_url": "https://github.com/NicoleFaye/Chat-Gpt-Long-Text-Input",
