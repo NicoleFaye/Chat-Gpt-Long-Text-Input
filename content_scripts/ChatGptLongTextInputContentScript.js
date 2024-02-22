@@ -179,7 +179,7 @@ import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js
     while (!isReady && !cancel) {
       let buttons = document.querySelectorAll('button');
       for (let i = 0; i < buttons.length; i++) {
-        if (buttons[i].className.includes("absolute md:bottom-3 md:right-3") &&
+        if (buttons[i].className.includes("p-1 rounded-md text-token-text-tertiary hover:text-token-text-primary md:invisible md:group-hover:visible md:group-[.final-completion]:visible") &&
           isElementVisible(buttons[i]) &&
           document.querySelectorAll('button[aria-label="Stop generating"]').length<1
           ) {
@@ -327,6 +327,7 @@ import splitString from "../content_scripts/ChatGptLongTextInputSharedMethods.js
       filePickerButton.style.width = "32px";
       filePickerButton.style.alignSelf = "center";
       filePickerButton.style.marginInline = "10px";
+      filePickerButton.style.visibility = "visible";
 
       if (buttonContainer.hasChildNodes()) {
         if (buttonContainer.firstChild.id !== "File-Picker-Button") {
